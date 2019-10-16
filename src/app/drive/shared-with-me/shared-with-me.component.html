@@ -1,1 +1,94 @@
-<p>SharedWithMeComponent</p>
+<div class="row justify-content-center mt-3">
+  <div class="col-8">
+    <app-search-bar (search)="onSearch($event)"></app-search-bar>
+  </div>
+  <div class="col-12">
+    <table class="table table-responsive-sm table-hover mt-3">
+      <thead>
+      <tr>
+        <th>File <i [class]="filenameAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+                    (click)="onSortFilename()"></i></th>
+        <th>Sharing <i [class]="nameAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+                       (click)="onSortName()"></i></th>
+        <th>Modified <i [class]="modifiedAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+                        (click)="onSortLastModified()"></i></th>
+        <th>Size <i [class]="sizeAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+                    (click)="onSortSize()"></i></th>
+        <th>Share <i [class]="shareDateAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+                     (click)="onSortShareDate()"></i></th>
+        <th class="pb-3">Message</th>
+        <th class="text-center pb-3">Download</th>
+        <th class="text-center pb-3">Discard</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let file of filteredMappedShareds; let i = index">
+        <td class="d-flex flex-row align-items-baseline"><i [class]="file.typeClass"></i> <p class="ml-3">{{file.filename}}</p></td>
+        <td>{{file.name}}</td>
+        <td>{{file.lastModified | date:'dd.MM.yyyy.'}}</td>
+        <td>{{file.size|numberToSize}}</td>
+        <td>{{file.shareDate | date:'dd.MM.yyyy.'}}</td>
+        <td>
+          <p data-toggle="modal" appDataTarget [data]="'#myModal' + i">
+            {{file.message.length > 10 ? file.message.substr(0, 7).concat('...') : file.message}}
+          </p>
+          <div class="modal fade" [id]="'myModal' + i">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Message</h4>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                  {{file.message}}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="text-center">
+          <i class="fas fa-cloud-download-alt text-success" data-toggle="modal" appDataTarget [data]="'#downloadModal' + i"></i>
+          <div class="modal fade" [id]="'downloadModal' + i">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Download</h4>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                  Do you want to download file: <strong>{{file.filename}}</strong>?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-success">OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="text-center">
+          <i class="fas fa-trash-alt text-danger" data-toggle="modal" appDataTarget [data]="'#discardModal' + i"></i>
+          <div class="modal fade" [id]="'discardModal' + i" >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Discard</h4>
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                  Do you want to discard file: <strong>{{file.filename}}</strong>?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger">OK</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,1 +1,29 @@
-<p>LogInComponent</p>
+<div class="d-flex justify-content-around mt-5">
+  <h1 class="custom-header">Authenticate</h1>
+</div>
+<form class="form-group mt-5" [formGroup]="form">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text bg-primary text-white">Email</span>
+    </div>
+    <input type="email" class="form-control" placeholder="Email" formControlName="email">
+    <div
+      *ngIf="!form.get('email').valid && form.get('email').touched"
+      class="invalid-feedback d-flex justify-content-around">
+      Email must contain '@' sign!
+    </div>
+  </div>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text bg-primary text-white">Password</span>
+    </div>
+    <input type="password" class="form-control" placeholder="Password" formControlName="password">
+    <div
+      *ngIf="!form.get('password').valid && form.get('password').touched"
+      class="invalid-feedback d-flex justify-content-around">
+      Password is required!
+    </div>
+  </div>
+  <button class="btn btn-block btn-primary mt-5" (click)="onLogin()" [disabled]="!form.valid">LOG IN</button>
+  <button class="btn btn-block btn-outline-info" routerLink="/auth/sign-up">Sign up</button>
+</form>

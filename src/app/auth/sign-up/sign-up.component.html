@@ -1,1 +1,51 @@
-<p>SignUpComponent</p>
+<div class="d-flex justify-content-around mt-5">
+  <h1 class="custom-header">Register your account</h1>
+</div>
+<form class="form-group mt-5" [formGroup]="form">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text bg-info text-white">User</span>
+    </div>
+    <input type="text" class="form-control" placeholder="First Name" formControlName="name">
+    <input type="text" class="form-control" placeholder="Last Name" formControlName="surname">
+    <div
+      *ngIf="!form.get('name').valid && form.get('name').touched"
+      class="invalid-feedback d-flex justify-content-around">
+      First name is required!
+    </div>
+    <div
+      *ngIf="!form.get('surname').valid && form.get('surname').touched"
+      class="invalid-feedback d-flex justify-content-around">
+      Last name is required!
+    </div>
+  </div>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text bg-info text-white">Email</span>
+    </div>
+    <input type="email" class="form-control" placeholder="Email" formControlName="email">
+    <div
+      *ngIf="!form.get('email').valid && form.get('email').touched"
+      class="invalid-feedback d-flex justify-content-around">
+      Email must contain '@' sign!
+    </div>
+  </div>
+  <div [formGroup]="form.get('pass')" class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text bg-info text-white">Password</span>
+    </div>
+    <input type="password" class="form-control" placeholder="Password" formControlName="password">
+    <input type="password" class="form-control" placeholder="Confirm Password" formControlName="confirmPassword">
+    <div
+      *ngIf="!form.get('pass.password').valid && form.get('pass.password').touched"
+      class="invalid-feedback d-flex justify-content-around">
+      Password must contain at least 6 characters!
+    </div>
+    <div
+      *ngIf="!form.get('pass').valid && form.get('pass.confirmPassword').touched"
+      class="invalid-feedback d-flex justify-content-around">
+      Password mismatch!
+    </div>
+  </div>
+  <button class="btn btn-block btn btn-outline-info mt-5" (click)="onSignUp()" [disabled]="!form.valid">Sign up</button>
+</form>

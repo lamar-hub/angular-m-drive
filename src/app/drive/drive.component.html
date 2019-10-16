@@ -1,2 +1,89 @@
-<p>DriveComponent</p>
-<router-outlet></router-outlet>
+<div class="row border-bottom bg-light align-items-center justify-content-between">
+  <div class="d-md-none col-12">
+    <nav class="navbar navbar-light bg-light">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav flex-column nav-pills nav-fill" role="tablist">
+          <li role="presentation" class="nav-item">
+            <a class="nav-link round-nav">
+              {{this.user.name}} {{this.user.surname}}
+            </a>
+          </li>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link round-nav">
+              {{this.user.email}}
+            </a>
+          </li>
+          <li role="presentation" class="nav-item text-left">
+            <a class="nav-link round-nav" routerLink="/drive/my-files">
+              <i class="fas fa-folder"></i> My files
+            </a>
+          </li>
+          <li role="presentation" class="nav-item text-left">
+            <a class="nav-link round-nav" routerLink="/drive/shared-with-me">
+              <i class="fas fa-folder-plus"></i> Shared with me
+            </a>
+          </li>
+          <li role="presentation" class="nav-item text-left">
+            <a class="nav-link round-nav" routerLink="/auth">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="d-none d-md-block col-sm-4">
+    <img src="../../assets/images/logo.png" height="50" class="outline-none" routerLink="/drive">
+  </div>
+  <div class="d-none col-md-4 d-md-flex justify-content-end pr-3">
+    <div class="dropdown">
+      <button type="button" class="btn btn-block outline-none" data-toggle="dropdown">
+        <i class="fas fa-user-circle fa-2x" style="color: #315b96"></i>
+      </button>
+      <div class="dropdown-menu dropdown-menu-right p-2">
+        <p class="font-weight-bolder mb-2">{{user.name}} {{user.surname}}</p>
+        <p class="font-italic">{{user.email}}</p>
+        <button class="btn btn-block btn-link text-left p-0 text-info" routerLink="/auth"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-12 col-lg-9 order-lg-3">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="col-12 col-lg-3 order-lg-2">
+    <div class="row mt-3">
+      <div class="d-none d-md-block col-12 col-md-6 col-lg-12">
+        <ul class="nav flex-column nav-pills nav-fill" role="tablist">
+          <li role="presentation" class="nav-item text-left">
+            <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/my-files">
+              <i class="fas fa-folder"></i> My files
+            </a>
+          </li>
+          <li role="presentation" class="nav-item text-left">
+            <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/shared-with-me">
+              <i class="fas fa-folder-plus"></i> Shared with me
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-12 col-md-6 col-lg-12 d-flex flex-column mt-5 mt-md-0 mt-lg-5" style="opacity: 0.8">
+        <canvas class="align-self-center" baseChart style="max-width: 350px;"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType"
+                [options]="pieChartOptions"
+                [colors]="pieChartColors"
+                [legend]="pieChartLegend">
+        </canvas>
+        <button class="btn btn-link font-italic text-info" style="opacity: 1">Upgrade storage to 1GB</button>
+      </div>
+    </div>
+  </div>
+</div>

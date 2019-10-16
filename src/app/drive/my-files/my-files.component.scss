@@ -1,0 +1,41 @@
+input:focus, textarea:focus {
+  box-shadow: none;
+}
+
+.btn:focus {
+  box-shadow: none;
+}
+
+.btn:not(:disabled):not(.disabled):active:focus,
+.show > .btn.dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+th {
+  border: 0;
+}
+
+i:hover {
+  background-color: lightgray;
+  border-radius: 50%;
+}
+
+th {
+  opacity: 0.7;
+}
+
+.table td {
+  vertical-align: baseline;
+}
+
+.fa-trash-alt {
+  padding: .65rem;
+}
+
+.fa-cloud-download-alt {
+  padding: .65rem;
+}
+
+.fa-user-plus {
+  padding: .65rem;
+}
