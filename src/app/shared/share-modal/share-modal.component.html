@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h4 class="modal-title">Share file</h4>
+  <button class="close" (click)="activeModal.dismiss()">×</button>
+</div>
+<div class="modal-body">
+  <form class="form-group mt-5" [formGroup]="form">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text bg-light">Email</span>
+      </div>
+      <input type="email" class="form-control" placeholder="Email" formControlName="email">
+      <div
+        *ngIf="!form.get('email').valid && form.get('email').touched"
+        class="invalid-feedback d-flex justify-content-around">
+        Email must contain '@' sign!
+      </div>
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text bg-light">Message</span>
+      </div>
+      <textarea class="form-control" formControlName="message" placeholder="Message"></textarea>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary"
+          (click)="activeModal.close({email: form.get('email').value, message: form.get('message').value})"
+          [disabled]="!form.valid">OK</button>
+</div>
+

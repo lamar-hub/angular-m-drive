@@ -1,25 +1,113 @@
 import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 import {File} from './file.model';
+import {filter, switchMap, take, tap} from 'rxjs/operators';
+import {ToastService} from '../toast.service';
 
+interface IFile {
+  fileID: string;
+  filename: string;
+  size: number;
+  lastModified: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileService {
 
-  files: File[] = [
-    {fileID: '1', filename: 'text.json', size: 254441, lastModified: 157036811911, type: 'text/json'},
-    {fileID: '2', filename: 'text.pdf', size: 254444911, lastModified: 1572036811962, type: 'application/pdf'},
-    {fileID: '3', filename: 'text.docx', size: 2542, lastModified: 125703681193, type: 'application/docx'},
-    {fileID: '4', filename: 'text.csv', size: 2542, lastModified: 125703681193, type: 'application/csv'},
-    {fileID: '5', filename: 'text.php', size: 2542, lastModified: 125703681193, type: 'application/php'}
-  ];
+  // tslint:disable-next-line:variable-name
+  private _filesSubject = new BehaviorSubject<File[]>(null);
 
-  getAllFiles() {
-    return [...this.files];
+  constructor(private httpClient: HttpClient, private toastService: ToastService) {
   }
 
-  saveFile(file: any) {
-    this.files.push({fileID: 'user-1', filename: file.name, lastModified: file.lastModified, type: file.type, size: file.size});
+  get filesObservable() {
+    return this._filesSubject.asObservable();
+  }
+
+  getAllFiles() {
+    return this.httpClient
+      .get<IFile[]>(`http://localhost:8080/api/files`)
+      .pipe(
+        tap(response => {
+          const files: File[] = [];
+          response.forEach(item => {
+            files.push(new File(item.fileID, item.filename, item.size, item.lastModified));
+          });
+          this._filesSubject.next(files);
+        })
+      );
+  }
+
+  uploadFile(file: any) {
+    const data = new FormData();
+    data.set('file', file);
+
+    let uploadedFile: File;
+
+    return this.httpClient
+      .post(`http://localhost:8080/api/files`, data, {reportProgress: true, observe: 'events'})
+      .pipe(
+        filter((response: any) => {
+          if (response && response.type === 0) {
+            console.log(response);
+            this.toastService.show({header: 'Message', content: 'Start uploading...'});
+          }
+          if (response && response.type === 1) {
+            console.log(response);
+            this.toastService.show({header: 'Message', content: 'Half uploading...'});
+          }
+          return response && response.type === 4;
+        }),
+        switchMap(response => {
+          if (response) {
+            uploadedFile = new File(response.body.fileID, response.body.filename, response.body.size, response.body.lastModified);
+          }
+          return this.filesObservable;
+        }),
+        take(1),
+        tap(files => {
+          if (uploadedFile) {
+            files.push(uploadedFile);
+            this._filesSubject.next([...files]);
+          }
+        })
+      );
+  }
+
+  deleteFile(fileID: string) {
+    let responseFileID: string;
+    console.log('MUnem');
+
+    return this.httpClient
+      .delete<{ fileID: string }>(`http://localhost:8080/api/files/${fileID}`)
+      .pipe(
+        switchMap(response => {
+          if (response) {
+            responseFileID = response.fileID;
+          }
+          return this.filesObservable;
+        }),
+        take(1),
+        tap(files => {
+          if (responseFileID) {
+            this._filesSubject.next(files.filter(f => f.fileID !== responseFileID));
+          }
+        })
+      );
+  }
+
+  shareFile(fileID: string, email: string, message: string) {
+    return this.httpClient
+      .post(`http://localhost:8080/api/shareds`, {fileID, username: email, message})
+      .pipe(
+        tap(response => {
+          if (response) {
+            alert(response);
+          }
+        })
+      );
   }
 }

@@ -3,6 +3,7 @@ import {User} from '../auth/user.model';
 import {AuthService} from '../auth/auth.service';
 import {ChartOptions, ChartType} from 'chart.js';
 import {Label} from 'ng2-charts';
+import {NumberToSizePipe} from './number-to-size.pipe';
 
 @Component({
   selector: 'app-drive',
@@ -12,6 +13,9 @@ import {Label} from 'ng2-charts';
 export class DriveComponent implements OnInit {
 
   user: User;
+
+  isCollapsed = true;
+
   pieChartOptions: ChartOptions;
   pieChartLabels: Label[];
   pieChartData: number[];
@@ -19,19 +23,24 @@ export class DriveComponent implements OnInit {
   pieChartLegend: boolean;
   pieChartColors;
 
-  constructor(private authService: AuthService) {
-
+  constructor(private authService: AuthService, private pipe: NumberToSizePipe) {
   }
 
   ngOnInit() {
-    this.user = this.authService.getUser();
+    this.authService
+      .userObservable
+      .subscribe(
+        user => {
+          this.user = user;
+        }
+      );
     this.setUpChart(this.user.stored, this.user.limit);
   }
 
   setUpChart(stored, limit) {
     this.pieChartOptions = {
       title: {
-        text: this.user.stored.toString() + ' MB of ' + this.user.limit.toString() + ' MB used',
+        text: this.pipe.transform(this.user.stored) + ' of ' + this.pipe.transform(this.user.limit) + ' used',
         display: true,
         fontSize: 15,
       },
@@ -42,7 +51,7 @@ export class DriveComponent implements OnInit {
         display: false
       }
     };
-    this.pieChartLabels = ['Stored MB', 'Available MB'];
+    this.pieChartLabels = [this.pipe.transform(stored), this.pipe.transform(limit - stored)];
     this.pieChartData = [stored, limit - stored];
     this.pieChartType = 'pie';
     this.pieChartLegend = true;

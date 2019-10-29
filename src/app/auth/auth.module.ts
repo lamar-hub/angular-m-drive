@@ -5,6 +5,7 @@ import {LogInComponent} from './log-in/log-in.component';
 import {SignUpComponent} from './sign-up/sign-up.component';
 import {AuthComponent} from './auth.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule.forChild(routes)
   ]
 })

@@ -7,6 +7,10 @@
   box-shadow: none;
 }
 
+label{
+  margin: 0;
+}
+
 th {
   border: 0;
 }
@@ -16,13 +20,12 @@ i:hover {
   border-radius: 50%;
 }
 
+.table td {
+  vertical-align: middle;
+}
 
 th {
   opacity: 0.7;
-}
-
-.table td {
-  vertical-align: baseline;
 }
 
 .fa-trash-alt {
@@ -31,4 +34,11 @@ th {
 
 .fa-cloud-download-alt {
   padding: .65rem;
+}
+
+.trim-text {
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

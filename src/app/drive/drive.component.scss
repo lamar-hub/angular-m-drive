@@ -14,3 +14,7 @@
 .font-italic{
   opacity: 0.8;
 }
+
+.dropdown-toggle::after{
+  display: none;
+}

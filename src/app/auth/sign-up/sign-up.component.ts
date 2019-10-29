@@ -41,13 +41,15 @@ export class SignUpComponent implements OnInit {
     if (!this.form.valid) {
       alert('Invalid data!');
     }
-    this.authService.signUp(
-      {
-        name: this.form.get('name').value,
-        surname: this.form.get('surname').value,
-        email: this.form.get('email').value,
-        password: this.form.get('pass.password').value
-      }
-    );
+    this.authService
+      .signUp(
+        {
+          name: this.form.get('name').value,
+          surname: this.form.get('surname').value,
+          email: this.form.get('email').value,
+          password: this.form.get('pass.password').value
+        }
+      )
+      .subscribe();
   }
 }

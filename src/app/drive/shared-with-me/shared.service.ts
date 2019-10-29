@@ -1,42 +1,84 @@
 import {Injectable} from '@angular/core';
 import {Shared} from './shared.model';
+import {BehaviorSubject} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {switchMap, take, tap} from 'rxjs/operators';
+
+interface IShared {
+  sharedFileID: string;
+  sharedFileFilename: string;
+  sharedFileSize: number;
+  sharedFileLastModified: number;
+  sharedUserEmail: string;
+  sharedUserName: string;
+  sharedUserSurname: string;
+  message: string;
+  date: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
 
-  shareds: Shared[] = [
-    {
-      sharedFile: {fileID: 'file-1', filename: 'tample.html', size: 23543, lastModified: 2323124524342, type: 'nebitno'},
-      sharedUser: {userId: 'user-1', email: 'lazarmarinkovic29@gmail.com', name: 'Lazar', surname: 'Marinkovic', stored: 112, limit: 512},
-      shareDate: 132323232323233,
-      message: 'Posao je dobro odradjen!'
-    },
-    {
-      sharedFile: {fileID: 'file-2', filename: 'tample.css', size: 2352425243, lastModified: 23231245424342, type: 'nebitno'},
-      sharedUser: {userId: 'user-1', email: 'lazarmarinkovic29@gmail.com', name: 'Lazar', surname: 'Marinkovic', stored: 112, limit: 512},
-      shareDate: 1323232323233,
-      message: 'Kulajna!'
-    },
-    {
-      sharedFile: {fileID: 'file-3', filename: 'tample.js', size: 243, lastModified: 23231254524342, type: 'nebitno'},
-      sharedUser: {userId: 'user-1', email: 'lazarmarinkovic29@gmail.com', name: 'Lazar', surname: 'Marinkovic', stored: 112, limit: 512},
-      shareDate: 1323232323233,
-      message: 'Livada i njiva!'
-    },
-    {
-      sharedFile: {fileID: 'file-4', filename: 'tample.mp4', size: 2365425243, lastModified: 26323124524342, type: 'nebitno'},
-      sharedUser: {userId: 'user-1', email: 'lazarmarinkovic29@gmail.com', name: 'Lazar', surname: 'Marinkovic', stored: 112, limit: 512},
-      shareDate: 1323232322223233,
-      message: 'Fulcina!'
-    },
-  ];
+  // tslint:disable-next-line:variable-name
+  private _sharedsSubject = new BehaviorSubject<Shared[]>(null);
 
-  constructor() {
+  constructor(private httpClient: HttpClient) {
+  }
+
+  get sharedsObservable() {
+    return this._sharedsSubject.asObservable();
   }
 
   getAllShareds() {
-    return [...this.shareds];
+    return this.httpClient
+      .get<IShared[]>(`http://localhost:8080/api/shareds`)
+      .pipe(
+        tap(response => {
+          const shareds: Shared[] = [];
+          response.forEach(item => {
+            shareds.push(new Shared(
+              item.sharedFileID,
+              item.sharedFileFilename,
+              item.sharedFileSize,
+              item.sharedFileLastModified,
+              item.sharedUserEmail,
+              item.sharedUserName,
+              item.sharedUserSurname,
+              item.message,
+              item.date
+            ));
+          });
+          this._sharedsSubject.next(shareds);
+        })
+      );
+  }
+
+  unshare(fileID: string, email: string) {
+    let responseFileID: string;
+
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      body: {fileID, username: email}
+    };
+
+    return this.httpClient
+      .delete<{ fileID: string }>(`http://localhost:8080/api/shareds`, httpOptions)
+      .pipe(
+        switchMap(response => {
+          if (response) {
+            responseFileID = response.fileID;
+          }
+          return this.sharedsObservable;
+        }),
+        take(1),
+        tap((shareds: Shared[]) => {
+          if (responseFileID) {
+            shareds.filter(s => s.sharedFileID !== responseFileID);
+            this._sharedsSubject.next(shareds.filter(s => s.sharedFileID !== responseFileID));
+          }
+        })
+      );
   }
 }

@@ -15,12 +15,12 @@ export class InputFileComponent implements OnInit {
   ngOnInit() {
   }
 
-  onChange(files: any) {
+  onChange(files: FileList) {
     if (files.length !== 1) {
       alert('Must choose exactly one file!');
       return;
     }
-
+    console.log(files);
     this.output.emit(files[0]);
   }
 }

@@ -9,100 +9,57 @@
     <table class="table table-responsive-sm table-hover mt-3">
       <thead>
       <tr>
-        <th>File <i [class]="filenameAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-                    (click)="onSortFilename()"></i></th>
-        <th>Modified <i [class]="modifiedAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-                        (click)="onSortLastModified()"></i></th>
-        <th>Size <i [class]="sizeAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-                    (click)="onSortSize()"></i></th>
+        <th class="pb-3 pr-0" style="width: 25px">
+          File
+        </th>
+        <th class="pl-0">
+          <i [class]="filenameAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+             (click)="onSortFilename()"></i>
+        </th>
+        <th>
+          <div class="d-flex flex-row align-items-baseline">
+            <label class="mb-0">Size</label>
+            <i [class]="sizeAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+               (click)="onSortSize()"></i>
+          </div>
+        </th>
+        <th>
+          <div class="d-flex flex-row align-items-baseline justify-content-center">
+            <label class="mb-0">Last</label>
+            <label class="mb-0 ml-1">modified</label>
+            <i [class]="modifiedAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
+               (click)="onSortLastModified()"></i>
+          </div>
+        </th>
         <th class="text-center pb-3">Download</th>
         <th class="text-center pb-3">Share</th>
         <th class="text-center pb-3">Delete</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let file of filteredMappedFiles; let i = index">
-        <td class="d-flex flex-row align-items-baseline"><i [class]="file.typeClass"></i>
-          <p class="ml-3">{{file.filename}}</p></td>
-        <td>{{file.lastModified | date:'dd.MM.yyyy.'}}</td>
+      <tr *ngFor="let file of files
+                                | search: search
+                                | sortString: 'filename' : filenameAsc
+                                | sortNumber: 'lastModified' : modifiedAsc
+                                | sortNumber: 'size' : sizeAsc">
+        <td class="pr-0">
+          <i [class]="file.filename | icon"></i>
+        </td>
+        <td class="trim-text"
+            data-toggle="tooltip"
+            data-placement="top"
+            [title]="file.filename">{{file.filename}}
+        </td>
         <td>{{file.size | numberToSize}}</td>
+        <td class="text-center">{{file.lastModified | date : 'dd.MM.yyyy.'}}</td>
         <td class="text-center">
-          <i class="fas fa-cloud-download-alt text-success" data-toggle="modal" appDataTarget
-             [data]="'#downloadModal' + i"></i>
-          <div class="modal fade" [id]="'downloadModal' + i">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title">Download</h4>
-                  <button class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-                  Do you want to download file: <strong>{{file.filename}}</strong>?
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-success">OK</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <i class="fas fa-cloud-download-alt text-success" (click)="openDownloadModal(file)"></i>
         </td>
         <td class="text-center">
-          <i class="fas fa-user-plus text-primary" data-toggle="modal" appDataTarget [data]="'#shareModal' + i"></i>
-          <div class="modal fade" [id]="'shareModal' + i">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title">Share</h4>
-                  <button class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-                  <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="addon-wrapping">Share to</span>
-                    </div>
-                    <input
-                      type="email"
-                      class="form-control"
-                      placeholder="Email"
-                      aria-label="Email"
-                      aria-describedby="addon-wrapping">
-                  </div>
-                  <br>
-                  <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="addon-wrappings">Message</span>
-                    </div>
-                    <textarea
-                      placeholder="Message"
-                      class="form-control"
-                      aria-describedby="addon-wrappings"></textarea>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-primary">OK</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <i class="fas fa-user-plus text-primary" (click)="openShareModal(file)"></i>
         </td>
         <td class="text-center">
-          <i class="fas fa-trash-alt text-danger" data-toggle="modal" appDataTarget [data]="'#deleteModal' + i"></i>
-          <div class="modal fade" [id]="'deleteModal' + i">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title">Delete</h4>
-                  <button class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-                  Do you want to delete file: <strong>{{file.filename}}</strong>?
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-danger">OK</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <i class="fas fa-trash-alt text-danger" (click)="openDeleteModal(file)"></i>
         </td>
       </tr>
       </tbody>

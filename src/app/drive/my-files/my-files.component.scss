@@ -25,7 +25,7 @@ th {
 }
 
 .table td {
-  vertical-align: baseline;
+  vertical-align: middle;
 }
 
 .fa-trash-alt {
@@ -38,4 +38,11 @@ th {
 
 .fa-user-plus {
   padding: .65rem;
+}
+
+.trim-text {
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

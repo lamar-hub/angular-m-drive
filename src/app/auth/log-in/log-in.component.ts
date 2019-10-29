@@ -11,8 +11,8 @@ export class LogInComponent implements OnInit {
 
   form = new FormGroup(
     {
-      email: new FormControl(null,  {validators: [Validators.required, Validators.email]}),
-      password: new FormControl(null,  {validators: [Validators.required]})
+      email: new FormControl(null, {validators: [Validators.required, Validators.email]}),
+      password: new FormControl(null, {validators: [Validators.required]})
     }
   );
 
@@ -23,11 +23,13 @@ export class LogInComponent implements OnInit {
   }
 
   onLogin() {
-    this.authService.login(
-      {
-        email: this.form.get('email').value,
-        password: this.form.get('password').value
-      }
-    );
+    this.authService
+      .login(
+        {
+          email: this.form.get('email').value,
+          password: this.form.get('password').value
+        }
+      )
+      .subscribe();
   }
 }
