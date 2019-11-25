@@ -4,6 +4,7 @@ import {File} from './file.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalComponent} from '../../shared/modal/modal.component';
 import {ShareModalComponent} from '../../shared/share-modal/share-modal.component';
+import {SharedService} from '../shared-with-me/shared.service';
 
 @Component({
   selector: 'app-my-files',
@@ -19,7 +20,7 @@ export class MyFilesComponent implements OnInit {
   modifiedAsc = true;
   sizeAsc = true;
 
-  constructor(private fileService: FileService, private modalService: NgbModal) {
+  constructor(private fileService: FileService, private modalService: NgbModal, private sharedService: SharedService) {
   }
 
   ngOnInit() {
@@ -53,21 +54,6 @@ export class MyFilesComponent implements OnInit {
     this.fileService.uploadFile(file).subscribe();
   }
 
-  onDownload(fileID: string) {
-    const a = document.createElement('a');
-    a.href = `http://localhost:8080/api/files/${fileID}/download`;
-    a.click();
-  }
-
-  onShare(fileID: string, emailInput: HTMLInputElement, messageInput: HTMLTextAreaElement) {
-    if (!emailInput.checkValidity()) {
-      alert('Email is not in appropriate format!');
-      return;
-    }
-
-    this.fileService.shareFile(fileID, emailInput.value, messageInput.value).subscribe();
-  }
-
   openDeleteModal(file: File) {
     const modalRef = this.modalService.open(ModalComponent);
     modalRef.componentInstance.title = 'Delete';
@@ -75,7 +61,7 @@ export class MyFilesComponent implements OnInit {
     modalRef.result
       .then(result => {
         if (result.ok) {
-          this.fileService.deleteFile(file.fileID).subscribe();
+          this.fileService.deleteFile(file).subscribe();
         }
       })
       .catch(error => console.log(error));
@@ -101,7 +87,7 @@ export class MyFilesComponent implements OnInit {
     modalRef.result
       .then(result => {
         if (result) {
-          this.fileService.shareFile(file.fileID, result.email, result.message).subscribe();
+          this.sharedService.shareFile(file.fileID, result.email, result.message).subscribe();
         }
       })
       .catch(error => console.log(error));

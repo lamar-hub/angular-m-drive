@@ -50,6 +50,13 @@ export class SignUpComponent implements OnInit {
           password: this.form.get('pass.password').value
         }
       )
-      .subscribe();
+      .subscribe(
+        value => {
+
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 }

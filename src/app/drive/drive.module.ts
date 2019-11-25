@@ -7,7 +7,6 @@ import {DriveRoutingModule} from './drive-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {ChartsModule} from 'ng2-charts';
 import { NumberToSizePipe } from './number-to-size.pipe';
-import { DataTargetDirective } from './shared-with-me/data-target.directive';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SearchFilesPipe} from './my-files/search-files.pipe';
 import {IconPipe} from './icon.pipe';
@@ -18,6 +17,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ModalComponent} from '../shared/modal/modal.component';
 import {ShareModalComponent} from '../shared/share-modal/share-modal.component';
 import {ToastComponent} from '../shared/toast/toast.component';
+import {UpgradeModalComponent} from '../shared/upgrade-modal/upgrade-modal.component';
+import {SettingsModalComponent} from '../shared/settings-modal/settings-modal.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,6 @@ import {ToastComponent} from '../shared/toast/toast.component';
     IconPipe,
     SortStringPipe,
     SortNumberPipe,
-    DataTargetDirective,
   ],
   imports: [
     CommonModule,
@@ -43,7 +43,12 @@ import {ToastComponent} from '../shared/toast/toast.component';
   entryComponents: [
     ModalComponent,
     ShareModalComponent,
-    ToastComponent
+    ToastComponent,
+    UpgradeModalComponent,
+    SettingsModalComponent
+  ],
+  exports: [
+    NumberToSizePipe
   ],
   providers: [
     NumberToSizePipe,

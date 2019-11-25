@@ -3,6 +3,7 @@ import {SharedService} from './shared.service';
 import {Shared} from './shared.model';
 import {ModalComponent} from '../../shared/modal/modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ShareModalComponent} from '../../shared/share-modal/share-modal.component';
 @Component({
   selector: 'app-shared-with-me',
   templateUrl: './shared-with-me.component.html',
@@ -15,7 +16,6 @@ export class SharedWithMeComponent implements OnInit {
   search: string;
 
   filenameAsc = true;
-  modifiedAsc = true;
   sizeAsc = true;
   nameAsc = true;
   shareDateAsc = true;
@@ -37,10 +37,6 @@ export class SharedWithMeComponent implements OnInit {
 
   onSortFilename() {
     this.filenameAsc = !this.filenameAsc;
-  }
-
-  onSortLastModified() {
-    this.modifiedAsc = !this.modifiedAsc;
   }
 
   onSortSize() {
@@ -66,7 +62,7 @@ export class SharedWithMeComponent implements OnInit {
     modalRef.result
       .then(result => {
         if (result.ok) {
-          this.sharedService.unshare(shared.sharedFileID, shared.sharedUserEmail).subscribe();
+          this.sharedService.unshare(shared).subscribe();
         }
       })
       .catch(error => console.log(error));
@@ -93,6 +89,17 @@ export class SharedWithMeComponent implements OnInit {
     modalRef.componentInstance.content = message;
     modalRef.result
       .then()
+      .catch(error => console.log(error));
+  }
+
+  openShareModal(shared: Shared) {
+    const modalRef = this.modalService.open(ShareModalComponent);
+    modalRef.result
+      .then(result => {
+        if (result) {
+          this.sharedService.shareFile(shared.sharedFileID, result.email, result.message).subscribe();
+        }
+      })
       .catch(error => console.log(error));
   }
 }

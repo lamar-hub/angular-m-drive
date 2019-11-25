@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {catchError, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
 import {User} from './user.model';
+import {ToastService} from '../drive/toast.service';
 
-interface IUser {
+export interface IUser {
   userID: string;
   email: string;
   name: string;
@@ -13,7 +14,7 @@ interface IUser {
   stored: number;
   limit: number;
   token: string;
-  expirationTime: number;
+  expireIn: number;
 }
 
 @Injectable({
@@ -23,12 +24,19 @@ export class AuthService {
 
   // tslint:disable-next-line:variable-name
   private _userSubject = new BehaviorSubject<User>(null);
+  // tslint:disable-next-line:variable-name
+  private _user: User;
 
-  constructor(private router: Router, private httpClient: HttpClient) {
+  constructor(private router: Router, private httpClient: HttpClient, private toastService: ToastService) {
   }
 
   get userObservable() {
     return this._userSubject.asObservable();
+  }
+
+  updateStored(size: number) {
+    this._user.stored = this._user.stored + size;
+    this._userSubject.next(this._user);
   }
 
   signUp(param: { password: string; surname: string; name: string; email: string }) {
@@ -53,9 +61,10 @@ export class AuthService {
               response.stored,
               response.limit,
               response.token,
-              response.expirationTime
+              response.expireIn
             );
             this._userSubject.next(user);
+            this._user = user;
             this.router.navigateByUrl('/drive');
           }
         })
@@ -67,7 +76,7 @@ export class AuthService {
       .post<IUser>(
         `http://localhost:8080/auth`,
         {
-          username: param.email,
+          email: param.email,
           password: param.password
         }
       )
@@ -82,12 +91,51 @@ export class AuthService {
               response.stored,
               response.limit,
               response.token,
-              response.expirationTime
+              response.expireIn
             );
             this._userSubject.next(user);
+            this._user = user;
             this.router.navigateByUrl('/drive');
           }
         })
       );
   }
+
+  logout() {
+    this._userSubject.next(null);
+    this._user = null;
+    this.toastService.clear();
+    this.router.navigateByUrl('/auth');
+  }
+
+  upgradeUser(plan: string) {
+    // @ts-ignore
+    return this.httpClient
+      .patch(`http://localhost:8080/users`)
+      .pipe(
+        tap((response: any) => {
+          console.log(response);
+          if (response) {
+            const user = new User(
+              response.userID,
+              response.email,
+              response.name,
+              response.surname,
+              response.stored,
+              response.limit,
+              this._user.token,
+              this._user.expireIn
+            );
+            this._userSubject.next(user);
+            this._user = user;
+          }
+        })
+      );
+  }
+
+  deleteUser() {
+    return this.httpClient
+      .delete(`http://localhost:8080/users`);
+  }
+
 }

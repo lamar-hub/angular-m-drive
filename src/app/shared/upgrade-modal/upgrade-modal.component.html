@@ -1,0 +1,61 @@
+<div class="modal-header">
+  <h4 class="modal-title">Upgrade your storage</h4>
+  <button class="close" (click)="activeModal.dismiss()">×</button>
+</div>
+<div class="modal-body">
+  <div class="card-deck mb-3 text-center">
+    <div *ngIf="plan < 1" class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Free</h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">$0 <small class="text-muted">/ mo</small></h1>
+        <ul class="list-unstyled mt-3 mb-4">
+          <li>500 MB of storage</li>
+          <li>Email support</li>
+          <li>Freemium business model</li>
+        </ul>
+        <button type="button"
+                class="btn btn-lg btn-block btn-primary"
+                [ngClass]="{'btn-outline-primary' : plan === 0}"
+                [disabled]="plan === 0">{{plan === 0 ? 'Current plan' : 'Subscribe'}}</button>
+      </div>
+    </div>
+    <div *ngIf="plan < 2" class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Business</h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">$10 <small class="text-muted">/ mo</small></h1>
+        <ul class="list-unstyled mt-3 mb-4">
+          <li>5 GB of storage</li>
+          <li>Email support</li>
+          <li>Phone support</li>
+        </ul>
+        <button type="button"
+                class="btn btn-lg btn-block btn-primary"
+                [ngClass]="{'btn-outline-primary' : plan === 1}"
+                [disabled]="plan === 1"
+                (click)="activeModal.close({plan: 'business'})">{{plan === 1 ? 'Current plan' : 'Subscribe'}}</button>
+      </div>
+    </div>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Pro</h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">$50 <small class="text-muted">/ mo</small></h1>
+        <ul class="list-unstyled mt-3 mb-4">
+          <li>100 GB of storage</li>
+          <li>Email support</li>
+          <li>Phone support</li>
+        </ul>
+        <button type="button"
+                class="btn btn-lg btn-block btn-primary"
+                [ngClass]="{'btn-outline-primary' : plan === 2}"
+                [disabled]="plan === 2"
+                (click)="activeModal.close({plan: 'pro'})">{{plan === 2 ? 'Current plan' : 'Subscribe'}}</button>
+      </div>
+    </div>
+  </div>
+</div>

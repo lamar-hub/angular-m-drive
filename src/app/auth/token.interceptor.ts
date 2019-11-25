@@ -1,7 +1,11 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {AuthService} from './auth.service';
+import {Injectable} from '@angular/core';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class TokenInterceptor implements HttpInterceptor {
 
   // tslint:disable-next-line:variable-name
@@ -11,6 +15,8 @@ export class TokenInterceptor implements HttpInterceptor {
     this.authService.userObservable.subscribe(user => {
       if (user) {
         this._token = user.token;
+      } else {
+        this._token = null;
       }
     });
   }

@@ -1,20 +1,27 @@
-.outline-none {
-  outline: 0;
-}
-
-.outline-none:focus {
-  box-shadow: none;
-}
-
-.round-nav{
+.round-nav {
   border-bottom-right-radius: 5cm;
   border-top-right-radius: 5cm;
 }
 
-.font-italic{
+.font-italic {
   opacity: 0.8;
 }
 
-.dropdown-toggle::after{
+.dropdown-toggle::after {
   display: none;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 25%;
+  height: 100%;
+  z-index: 3000;
+  overflow-y: auto;
+}
+
+.size {
+  font-size: 1.5rem;
+  font-style: italic;
 }

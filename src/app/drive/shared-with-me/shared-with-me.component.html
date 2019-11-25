@@ -30,14 +30,6 @@
         <th class="pb-3">Message</th>
         <th>
           <div class="d-flex flex-row align-items-baseline justify-content-center">
-            <label class="mb-0">Last</label>
-            <label class="mb-0 ml-1">modified</label>
-            <i [class]="modifiedAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-               (click)="onSortLastModified()"></i>
-          </div>
-        </th>
-        <th>
-          <div class="d-flex flex-row align-items-baseline justify-content-center">
             <label class="mb-0">Share</label>
             <label class="mb-0 ml-1">at</label>
             <i [class]="shareDateAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
@@ -45,6 +37,7 @@
           </div>
         </th>
         <th class="text-center pb-3">Download</th>
+        <th class="text-center pb-3">Share</th>
         <th class="text-center pb-3">Discard</th>
       </tr>
       </thead>
@@ -53,7 +46,6 @@
                                     | searchShareds: search
                                     | sortString: 'sharedFileFilename' : filenameAsc
                                     | sortString: 'sharedUserEmail' : nameAsc
-                                    | sortNumber: 'sharedFileLastModified' : modifiedAsc
                                     | sortNumber: 'sharedFileSize' : sizeAsc
                                     | sortNumber: 'shareDate' : shareDateAsc">
         <td class="pr-0">
@@ -70,10 +62,12 @@
         </td>
         <td>{{file.sharedFileSize | numberToSize}}</td>
         <td class="trim-text" (click)="openMessageModal(file.message)">{{file.message}}</td>
-        <td class="text-center">{{file.sharedFileLastModified | date:'dd.MM.yyyy.'}}</td>
         <td class="text-center">{{file.shareDate | date:'dd.MM.yyyy.'}}</td>
         <td class="text-center">
           <i class="fas fa-cloud-download-alt text-success" (click)="openDownloadModal(file)"></i>
+        </td>
+        <td class="text-center">
+          <i class="fas fa-user-plus text-primary" (click)="openShareModal(file)"></i>
         </td>
         <td class="text-center">
           <i class="fas fa-trash-alt text-danger" (click)="openDiscardModal(file)"></i>

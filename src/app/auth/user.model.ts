@@ -1,7 +1,7 @@
 export class User {
 
   constructor(
-    public userId: string,
+    public userID: string,
     public email: string,
     public name: string,
     public surname: string,
@@ -9,7 +9,7 @@ export class User {
     public limit: number,
     // tslint:disable-next-line:variable-name
     private _token: string,
-    public expirationTime: number) {
+    public expireIn: number) {
   }
 
   get token() {

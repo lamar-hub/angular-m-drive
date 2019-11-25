@@ -8,12 +8,9 @@ import {ToastService} from '../../drive/toast.service';
 })
 export class ToastComponent implements OnInit {
 
-  // @HostBinding('class.ngb-toasts') created = false;
-
   constructor(private toastService: ToastService) {
   }
 
   ngOnInit() {
-    // this.created = true;
   }
 }

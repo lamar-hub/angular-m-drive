@@ -6,7 +6,9 @@ import { ModalComponent } from './modal/modal.component';
 import { ShareModalComponent } from './share-modal/share-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { ToastComponent } from './toast/toast.component';
-import {NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbProgressbarModule, NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
+import { UpgradeModalComponent } from './upgrade-modal/upgrade-modal.component';
+import { SettingsModalComponent } from './settings-modal/settings-modal.component';
 
 
 @NgModule({
@@ -15,18 +17,23 @@ import {NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
     InputFileComponent,
     ModalComponent,
     ShareModalComponent,
-    ToastComponent
+    ToastComponent,
+    UpgradeModalComponent,
+    SettingsModalComponent
   ],
   exports: [
     SearchBarComponent,
     InputFileComponent,
     ModalComponent,
-    ToastComponent
+    ToastComponent,
+    UpgradeModalComponent,
+    SettingsModalComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgbToastModule
+    NgbToastModule,
+    NgbProgressbarModule,
   ]
 })
 export class SharedModule { }

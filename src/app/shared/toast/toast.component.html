@@ -1,5 +1,11 @@
 <ngb-toast *ngFor="let toast of this.toastService.toasts"
            [header]="toast.header"
            [autohide]="false"
-           (hide)="toastService.remove(toast)">{{ toast.content }}
+           (hide)="toastService.remove(toast)">
+  <p *ngIf="toast.header !== 'File uploading'">{{toast.content}}</p>
+  <ngb-progressbar *ngIf="toast.header == 'File uploading'"
+                   showValue="true"
+                   type="success"
+                   [value]="+toast.content"
+                   [max]="100"></ngb-progressbar>
 </ngb-toast>

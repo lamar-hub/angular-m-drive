@@ -4,6 +4,10 @@ import {AuthService} from '../auth/auth.service';
 import {ChartOptions, ChartType} from 'chart.js';
 import {Label} from 'ng2-charts';
 import {NumberToSizePipe} from './number-to-size.pipe';
+import {ToastService} from './toast.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Plan, UpgradeModalComponent} from '../shared/upgrade-modal/upgrade-modal.component';
+import {SettingsModalComponent} from '../shared/settings-modal/settings-modal.component';
 
 @Component({
   selector: 'app-drive',
@@ -15,6 +19,7 @@ export class DriveComponent implements OnInit {
   user: User;
 
   isCollapsed = true;
+  isCollapsedSideBar = true;
 
   pieChartOptions: ChartOptions;
   pieChartLabels: Label[];
@@ -23,7 +28,10 @@ export class DriveComponent implements OnInit {
   pieChartLegend: boolean;
   pieChartColors;
 
-  constructor(private authService: AuthService, private pipe: NumberToSizePipe) {
+  constructor(private authService: AuthService,
+              private pipe: NumberToSizePipe,
+              private toastsService: ToastService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -32,9 +40,11 @@ export class DriveComponent implements OnInit {
       .subscribe(
         user => {
           this.user = user;
+          if (user) {
+            this.setUpChart(this.user.stored, this.user.limit);
+          }
         }
       );
-    this.setUpChart(this.user.stored, this.user.limit);
   }
 
   setUpChart(stored, limit) {
@@ -62,4 +72,62 @@ export class DriveComponent implements OnInit {
     ];
   }
 
+  logout() {
+    this.authService.logout();
+  }
+
+  getPlan(): Plan {
+    let plan: Plan;
+
+    switch (this.user.limit) {
+      case 5000000:
+        plan = Plan.free;
+        break;
+      case 5000000000:
+        plan = Plan.business;
+        break;
+      case 100000000000:
+        plan = Plan.pro;
+        break;
+      default:
+        plan = Plan.free;
+    }
+
+    return plan;
+  }
+
+  openUpgradeModal() {
+    const modalRef = this.modalService.open(UpgradeModalComponent, {size: 'xl'});
+
+    modalRef.componentInstance.plan = this.getPlan();
+
+    modalRef.result
+      .then(result => {
+          if (result) {
+            this.authService.upgradeUser(result.plan).subscribe();
+          }
+        }
+      )
+      .catch(err => console.log(err));
+  }
+
+  openSettingsModal() {
+    const modalRef = this.modalService.open(SettingsModalComponent, {size: 'lg'});
+    modalRef.componentInstance.user = this.user;
+    modalRef.result
+      .then(result => {
+          if (result) {
+            this.authService
+              .deleteUser()
+              .subscribe(
+                () => {
+                  this.authService.logout();
+                },
+                error => console.log(error)
+              );
+          }
+        }
+      )
+      .catch(err => console.log(err));
+  }
 }

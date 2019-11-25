@@ -15,8 +15,8 @@ export class ToastService {
   constructor() {
   }
 
-  show(toast: IToast) {
-    this.toasts.push(toast);
+  clear() {
+    this.toasts = [];
   }
 
   remove(toast) {

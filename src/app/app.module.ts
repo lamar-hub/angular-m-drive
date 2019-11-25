@@ -8,7 +8,6 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthModule} from './auth/auth.module';
 import {DriveModule} from './drive/drive.module';
 import {TokenInterceptor} from './auth/token.interceptor';
-import {UserIDInterceptor} from './drive/userID.interceptor';
 
 @NgModule({
   declarations: [
@@ -26,11 +25,6 @@ import {UserIDInterceptor} from './drive/userID.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: UserIDInterceptor,
       multi: true
     }
   ],

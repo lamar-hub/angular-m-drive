@@ -44,15 +44,26 @@
     <img src="../../assets/images/logo.png" height="50" class="outline-none" routerLink="/drive">
   </div>
   <div class="d-none col-md-4 d-md-flex justify-content-end pr-3">
+    <button class="btn shadow-none"
+            (click)="isCollapsedSideBar = !isCollapsedSideBar"
+            [attr.aria-expanded]="!isCollapsedSideBar"
+            aria-controls="collapseSideBar">
+      <i class="fas fa-bell fa-2x" style="color: #315b96"></i>
+      <span *ngIf="toastsService.toasts.length !== 0" class="badge badge-pill badge-danger">{{toastsService.toasts.length}}</span>
+    </button>
+    <button class="btn shadow-none"
+            (click)="openSettingsModal()">
+      <i class="fas fa-cog fa-2x" style="color: #315b96"></i>
+    </button>
     <div class="dropdown" ngbDropdown>
-      <button type="button" class="btn btn-block outline-none" ngbDropdownToggle>
+      <button type="button" class="btn btn-block shadow-none" ngbDropdownToggle>
         <i class="fas fa-user-circle fa-2x" style="color: #315b96"></i>
       </button>
       <div class="dropdown-menu dropdown-menu-right p-2" ngbDropdownMenu>
         <p class="font-weight-bolder mb-2">{{user.name}} {{user.surname}}</p>
         <p class="font-italic">{{user.email}}</p>
         <button class="btn btn-block btn-link text-left p-0 text-info"
-                routerLink="/auth">
+                (click)="logout()">
           <i class="fas fa-sign-out-alt"></i> Logout
         </button>
       </div>
@@ -61,36 +72,53 @@
 </div>
 <div class="row mt-3">
   <div class="col-12 col-lg-9 order-lg-3">
-    <router-outlet></router-outlet>
-  </div>
+        <router-outlet></router-outlet>
+      </div>
   <div class="col-12 col-lg-3 order-lg-2">
-    <div class="row mt-3">
-      <div class="d-none d-md-block col-12 col-md-6 col-lg-12">
-        <ul class="nav flex-column nav-pills nav-fill" role="tablist">
-          <li role="presentation" class="nav-item text-left">
-            <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/my-files">
-              <i class="fas fa-folder"></i> My files
-            </a>
-          </li>
-          <li role="presentation" class="nav-item text-left">
-            <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/shared-with-me">
-              <i class="fas fa-folder-plus"></i> Shared with me
-            </a>
-          </li>
-        </ul>
+        <div class="row mt-3">
+          <div class="d-none d-md-block col-12 col-md-6 col-lg-12">
+            <ul class="nav flex-column nav-pills nav-fill" role="tablist">
+              <li role="presentation" class="nav-item text-left">
+                <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/my-files">
+                  <i class="fas fa-folder"></i> My files
+                </a>
+              </li>
+              <li role="presentation" class="nav-item text-left">
+                <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/shared-with-me">
+                  <i class="fas fa-folder-plus"></i> Shared with me
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-6 col-lg-12 d-flex flex-column mt-5 mt-md-0 mt-lg-5" style="opacity: 0.8">
+            <canvas class="align-self-center" baseChart style="max-width: 350px;"
+                    [data]="pieChartData"
+                    [labels]="pieChartLabels"
+                    [chartType]="pieChartType"
+                    [options]="pieChartOptions"
+                    [colors]="pieChartColors"
+                    [legend]="pieChartLegend">
+            </canvas>
+            <button class="btn btn-link font-italic text-info"
+                    style="opacity: 1"
+                    (click)="openUpgradeModal()">Upgrade storage</button>
+          </div>
+        </div>
       </div>
-      <div class="col-12 col-md-6 col-lg-12 d-flex flex-column mt-5 mt-md-0 mt-lg-5" style="opacity: 0.8">
-        <canvas class="align-self-center" baseChart style="max-width: 350px;"
-                [data]="pieChartData"
-                [labels]="pieChartLabels"
-                [chartType]="pieChartType"
-                [options]="pieChartOptions"
-                [colors]="pieChartColors"
-                [legend]="pieChartLegend">
-        </canvas>
-        <button class="btn btn-link font-italic text-info" style="opacity: 1">Upgrade storage to 1GB</button>
-        <app-toast aria-live="assertive" aria-atomic="true"></app-toast>
-      </div>
+  <div [ngStyle]="{display: !isCollapsedSideBar}" class="fixed border-left bg-light" id="collapseSideBar" [ngbCollapse]="isCollapsedSideBar">
+    <div class="d-flex flex-row align-items-baseline justify-content-between border-bottom py-3 bg-info text-white"
+         style="opacity: .8">
+      <p class="pl-3 m-0 size">Notifications</p>
+      <button class="btn btn-outline-none" (click)="isCollapsedSideBar = !isCollapsedSideBar">
+        <i class="fas fa-times-circle fa-2x text-white"></i>
+      </button>
+    </div>
+    <div class="d-flex flex-row justify-content-end">
+      <button class="btn btn-link font-italic text-info"
+              (click)="toastsService.clear()">Clear all</button>
+    </div>
+    <div class="p-3">
+      <app-toast></app-toast>
     </div>
   </div>
 </div>
