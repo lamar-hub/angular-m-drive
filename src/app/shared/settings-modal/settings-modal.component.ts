@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '../../auth/user.model';
 
 @Component({
@@ -11,7 +10,8 @@ export class SettingsModalComponent implements OnInit {
 
   @Input() user: User;
 
-  constructor(private activeModal: NgbActiveModal) { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

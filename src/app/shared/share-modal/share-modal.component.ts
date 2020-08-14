@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -14,7 +13,7 @@ export class ShareModalComponent implements OnInit {
     message: new FormControl(null)
   });
 
-  constructor(private activeModal: NgbActiveModal) {
+  constructor() {
   }
 
   ngOnInit() {

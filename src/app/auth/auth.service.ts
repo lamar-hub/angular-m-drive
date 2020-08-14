@@ -111,7 +111,7 @@ export class AuthService {
   upgradeUser(plan: string) {
     // @ts-ignore
     return this.httpClient
-      .patch(`http://localhost:8080/users`)
+      .patch(`http://localhost:8080/users`, {})
       .pipe(
         tap((response: any) => {
           console.log(response);

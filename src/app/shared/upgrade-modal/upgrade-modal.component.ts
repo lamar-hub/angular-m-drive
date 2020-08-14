@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 export enum Plan {
   free,
@@ -16,7 +15,8 @@ export class UpgradeModalComponent implements OnInit {
 
   @Input() plan: Plan;
 
-  constructor(private activeModal: NgbActiveModal) { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

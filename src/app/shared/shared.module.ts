@@ -1,14 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {SearchBarComponent} from './search-bar/search-bar.component';
-import { InputFileComponent } from './input-file/input-file.component';
-import { ModalComponent } from './modal/modal.component';
-import { ShareModalComponent } from './share-modal/share-modal.component';
+import {InputFileComponent} from './input-file/input-file.component';
+import {ModalComponent} from './modal/modal.component';
+import {ShareModalComponent} from './share-modal/share-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import { ToastComponent } from './toast/toast.component';
-import {NgbProgressbarModule, NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
-import { UpgradeModalComponent } from './upgrade-modal/upgrade-modal.component';
-import { SettingsModalComponent } from './settings-modal/settings-modal.component';
+import {ToastComponent} from './toast/toast.component';
+import {UpgradeModalComponent} from './upgrade-modal/upgrade-modal.component';
+import {SettingsModalComponent} from './settings-modal/settings-modal.component';
 
 
 @NgModule({
@@ -32,8 +31,7 @@ import { SettingsModalComponent } from './settings-modal/settings-modal.componen
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgbToastModule,
-    NgbProgressbarModule,
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+}

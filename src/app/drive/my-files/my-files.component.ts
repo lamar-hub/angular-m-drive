@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FileService} from './file.service';
 import {File} from './file.model';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ModalComponent} from '../../shared/modal/modal.component';
-import {ShareModalComponent} from '../../shared/share-modal/share-modal.component';
 import {SharedService} from '../shared-with-me/shared.service';
 
 @Component({
@@ -20,7 +17,7 @@ export class MyFilesComponent implements OnInit {
   modifiedAsc = true;
   sizeAsc = true;
 
-  constructor(private fileService: FileService, private modalService: NgbModal, private sharedService: SharedService) {
+  constructor(private fileService: FileService, private sharedService: SharedService) {
   }
 
   ngOnInit() {
@@ -54,42 +51,42 @@ export class MyFilesComponent implements OnInit {
     this.fileService.uploadFile(file).subscribe();
   }
 
-  openDeleteModal(file: File) {
-    const modalRef = this.modalService.open(ModalComponent);
-    modalRef.componentInstance.title = 'Delete';
-    modalRef.componentInstance.content = `Do you want to delete: ${file.filename}`;
-    modalRef.result
-      .then(result => {
-        if (result.ok) {
-          this.fileService.deleteFile(file).subscribe();
-        }
-      })
-      .catch(error => console.log(error));
-  }
+  // openDeleteModal(file: File) {
+  //   const modalRef = this.modalService.open(ModalComponent);
+  //   modalRef.componentInstance.title = 'Delete';
+  //   modalRef.componentInstance.content = `Do you want to delete: ${file.filename}`;
+  //   modalRef.result
+  //     .then(result => {
+  //       if (result.ok) {
+  //         this.fileService.deleteFile(file).subscribe();
+  //       }
+  //     })
+  //     .catch(error => console.log(error));
+  // }
 
-  openDownloadModal(file: File) {
-    const modalRef = this.modalService.open(ModalComponent);
-    modalRef.componentInstance.title = 'Download';
-    modalRef.componentInstance.content = `Do you want to download: ${file.filename}`;
-    modalRef.result
-      .then(result => {
-        if (result.ok) {
-          const a = document.createElement('a');
-          a.href = `http://localhost:8080/api/files/${file.fileID}/download`;
-          a.click();
-        }
-      })
-      .catch(error => console.log(error));
-  }
+  // openDownloadModal(file: File) {
+  //   const modalRef = this.modalService.open(ModalComponent);
+  //   modalRef.componentInstance.title = 'Download';
+  //   modalRef.componentInstance.content = `Do you want to download: ${file.filename}`;
+  //   modalRef.result
+  //     .then(result => {
+  //       if (result.ok) {
+  //         const a = document.createElement('a');
+  //         a.href = `http://localhost:8080/api/files/${file.fileID}/download`;
+  //         a.click();
+  //       }
+  //     })
+  //     .catch(error => console.log(error));
+  // }
 
-  openShareModal(file: File) {
-    const modalRef = this.modalService.open(ShareModalComponent);
-    modalRef.result
-      .then(result => {
-        if (result) {
-          this.sharedService.shareFile(file.fileID, result.email, result.message).subscribe();
-        }
-      })
-      .catch(error => console.log(error));
-  }
+  // openShareModal(file: File) {
+  //   const modalRef = this.modalService.open(ShareModalComponent);
+  //   modalRef.result
+  //     .then(result => {
+  //       if (result) {
+  //         this.sharedService.shareFile(file.fileID, result.email, result.message).subscribe();
+  //       }
+  //     })
+  //     .catch(error => console.log(error));
+  // }
 }
