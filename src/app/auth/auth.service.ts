@@ -39,42 +39,23 @@ export class AuthService {
     this._userSubject.next(this._user);
   }
 
-  signUp(param: { password: string; surname: string; name: string; email: string }) {
+  signUp(param: { password: string; surname: string; name: string; email: string, phone: string }) {
     return this.httpClient
       .post<IUser>(
-        `http://localhost:8080/signup`,
+        `http://localhost:8080/sign-up`,
         {
           name: param.name,
           surname: param.surname,
           email: param.email,
           password: param.password
         }
-      )
-      .pipe(
-        tap(response => {
-          if (response) {
-            const user = new User(
-              response.userID,
-              response.email,
-              response.name,
-              response.surname,
-              response.stored,
-              response.limit,
-              response.token,
-              response.expireIn
-            );
-            this._userSubject.next(user);
-            this._user = user;
-            this.router.navigateByUrl('/drive');
-          }
-        })
       );
   }
 
   login(param: { password: string; email: string }) {
     return this.httpClient
       .post<IUser>(
-        `http://localhost:8080/auth`,
+        `http://localhost:8080/log-in`,
         {
           email: param.email,
           password: param.password
@@ -133,7 +114,7 @@ export class AuthService {
       );
   }
 
-  deleteUser() {
+  deactivateUser() {
     return this.httpClient
       .delete(`http://localhost:8080/users`);
   }

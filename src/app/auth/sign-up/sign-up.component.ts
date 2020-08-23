@@ -9,32 +9,36 @@ import {AuthService} from '../auth.service';
 })
 export class SignUpComponent implements OnInit {
 
+  constructor(private authService: AuthService) {
+  }
+
   form = new FormGroup(
     {
       name: new FormControl(null, {validators: Validators.required}),
       surname: new FormControl(null, {validators: Validators.required}),
       email: new FormControl(null, {validators: [Validators.required, Validators.email]}),
+      phone: new FormControl(null, {
+        // language=RegExp
+        validators: [Validators.required, Validators.pattern('^6[0-5][0-9]{6,7}$')]
+      }),
       pass: new FormGroup(
         {
           password: new FormControl(null, {validators: [Validators.required, Validators.minLength(6)]}),
           confirmPassword: new FormControl(null)
         },
-        {validators: this.confirmPasswordValidator}
+        {validators: SignUpComponent.confirmPasswordValidator}
       )
     }
   );
 
-  constructor(private authService: AuthService) {
-  }
-
-  ngOnInit() {
-  }
-
-  private confirmPasswordValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  private static confirmPasswordValidator(control: AbstractControl): { [key: string]: boolean } | null {
     if (control.get('password').value !== control.get('confirmPassword').value) {
       return {samePassword: true};
     }
     return null;
+  }
+
+  ngOnInit() {
   }
 
   onSignUp() {
@@ -47,12 +51,13 @@ export class SignUpComponent implements OnInit {
           name: this.form.get('name').value,
           surname: this.form.get('surname').value,
           email: this.form.get('email').value,
+          phone: this.form.get('phone').value,
           password: this.form.get('pass.password').value
         }
       )
       .subscribe(
-        value => {
-
+        response => {
+          console.log(response)
         },
         error => {
           console.log(error);

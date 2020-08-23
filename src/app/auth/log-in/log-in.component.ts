@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../auth.service';
+import {MatDialog} from '@angular/material/dialog';
+import {VerificationDialogComponent} from './verification-dialog/verification-dialog.component';
 
 @Component({
   selector: 'app-log-in',
@@ -16,7 +18,7 @@ export class LogInComponent implements OnInit {
     }
   );
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -31,5 +33,10 @@ export class LogInComponent implements OnInit {
         }
       )
       .subscribe();
+  }
+
+  onOpenDialog() {
+    const matDialogRef = this.dialog.open(VerificationDialogComponent);
+    matDialogRef.afterClosed().subscribe(value => console.log(value));
   }
 }

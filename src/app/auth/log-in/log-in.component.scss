@@ -3,19 +3,6 @@
   opacity: .4;
 }
 
-span {
-  width: 6rem;
-}
-
-input:focus {
-  box-shadow: none;
-}
-
-.btn:focus {
-  box-shadow: none;
-}
-
-.btn:not(:disabled):not(.disabled):active:focus,
-.show > .btn.dropdown-toggle:focus {
-  box-shadow: none;
+.full-width {
+  width: 100%;
 }
