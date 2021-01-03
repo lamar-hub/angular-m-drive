@@ -29,15 +29,6 @@
       Please enter a valid email address
     </mat-error>
   </mat-form-field>
-  <mat-form-field class="full-width">
-    <mat-label>Phone</mat-label>
-    <span matPrefix>+381 &nbsp;</span>
-    <input type="tel" matInput placeholder="64-444-4444" formControlName="phone">
-    <mat-icon matSuffix>mode_edit</mat-icon>
-    <mat-error *ngIf="!form.get('phone').valid && form.get('phone').touched">
-      Please enter a valid phone number
-    </mat-error>
-  </mat-form-field>
   <div class="row" [formGroup]="form.get('pass')">
     <div class="col-6">
       <mat-form-field class="full-width">

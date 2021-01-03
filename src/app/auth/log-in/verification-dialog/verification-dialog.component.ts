@@ -1,5 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-verification-dialog',
@@ -8,15 +8,13 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 })
 export class VerificationDialogComponent implements OnInit {
 
-  verificationCode = 'adfla';
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(public dialogRef: MatDialogRef<VerificationDialogComponent>) {
   }
 
   ngOnInit(): void {
   }
 
-  onConfirmCode() {
-
+  onConfirmCode(codeRef: HTMLInputElement) {
+    this.dialogRef.close(codeRef.value);
   }
 }

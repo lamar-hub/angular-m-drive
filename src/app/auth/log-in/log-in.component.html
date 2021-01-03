@@ -16,10 +16,13 @@
       Password is <strong>required</strong>
     </mat-error>
   </mat-form-field>
-  <button mat-raised-button class="full-width mt-5" color="primary" (click)="onLogin()"
+  <button mat-raised-button
+          class="full-width mt-5" color="primary"
+          (click)="onLogin()"
           [disabled]="!form.valid">LOG IN
   </button>
-  <button mat-flat-button class="full-width" routerLink="/auth/sign-up">Sign up</button>
-  <button mat-raised-button class="full-width mt-5" color="primary" (click)="onOpenDialog()">LOG IN
+  <button mat-flat-button
+          class="full-width"
+          routerLink="/auth/sign-up">Sign up
   </button>
 </form>

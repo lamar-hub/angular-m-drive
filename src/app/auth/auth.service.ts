@@ -7,14 +7,15 @@ import {User} from './user.model';
 import {ToastService} from '../drive/toast.service';
 
 export interface IUser {
-  userID: string;
+  userId: string;
   email: string;
   name: string;
   surname: string;
   stored: number;
   limit: number;
-  token: string;
-  expireIn: number;
+  jwtToken: string;
+  twoFactorVerification: boolean;
+  active: boolean;
 }
 
 @Injectable({
@@ -49,6 +50,13 @@ export class AuthService {
           email: param.email,
           password: param.password
         }
+      )
+      .pipe(
+        tap(response => {
+          if (response) {
+            this.router.navigateByUrl('/log-in');
+          }
+        })
       );
   }
 
@@ -65,14 +73,47 @@ export class AuthService {
         tap(response => {
           if (response) {
             const user = new User(
-              response.userID,
+              response.userId,
               response.email,
               response.name,
               response.surname,
               response.stored,
               response.limit,
-              response.token,
-              response.expireIn
+              response.jwtToken,
+              response.twoFactorVerification,
+              response.active
+            );
+            this._userSubject.next(user);
+            this._user = user;
+            this.router.navigateByUrl('/drive');
+          }
+        })
+      );
+  }
+
+  loginVerificationCode(param: { password: string; code: string; email: string }) {
+    return this.httpClient
+      .post<IUser>(
+        `http://localhost:8080/log-in-code`,
+        {
+          email: param.email,
+          password: param.password,
+          verificationCode: param.code
+        }
+      )
+      .pipe(
+        tap(response => {
+          if (response) {
+            const user = new User(
+              response.userId,
+              response.email,
+              response.name,
+              response.surname,
+              response.stored,
+              response.limit,
+              response.jwtToken,
+              response.twoFactorVerification,
+              response.active
             );
             this._userSubject.next(user);
             this._user = user;
@@ -98,14 +139,15 @@ export class AuthService {
           console.log(response);
           if (response) {
             const user = new User(
-              response.userID,
+              response.userId,
               response.email,
               response.name,
               response.surname,
               response.stored,
               response.limit,
-              this._user.token,
-              this._user.expireIn
+              response.jwtToken,
+              response.twoFactorVerification,
+              response.active
             );
             this._userSubject.next(user);
             this._user = user;

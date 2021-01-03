@@ -32,11 +32,16 @@ export class LogInComponent implements OnInit {
           password: this.form.get('password').value
         }
       )
-      .subscribe();
+      .subscribe(response => {
+        if (!response) {
+          const matDialogRef = this.dialog.open(VerificationDialogComponent);
+          matDialogRef.afterClosed().subscribe((code: string) => {
+            this.authService
+              .loginVerificationCode({code, password: this.form.get('password').value, email: this.form.get('email').value})
+              .subscribe(value => console.log(value));
+          });
+        }
+      });
   }
 
-  onOpenDialog() {
-    const matDialogRef = this.dialog.open(VerificationDialogComponent);
-    matDialogRef.afterClosed().subscribe(value => console.log(value));
-  }
 }
