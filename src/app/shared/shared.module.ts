@@ -1,36 +1,24 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SearchBarComponent} from './search-bar/search-bar.component';
-import {InputFileComponent} from './input-file/input-file.component';
-import {ModalComponent} from './modal/modal.component';
-import {ShareModalComponent} from './share-modal/share-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ToastComponent} from './toast/toast.component';
-import {UpgradeModalComponent} from './upgrade-modal/upgrade-modal.component';
-import {SettingsModalComponent} from './settings-modal/settings-modal.component';
+import {SimpleConfirmationDialogComponent} from './simple-confirmation-dialog/simple-confirmation-dialog.component';
+import {MaterialModule} from '../material/material.module';
+import { ShareConfirmationDialogComponent } from './share-confirmation-dialog/share-confirmation-dialog.component';
 
 
 @NgModule({
   declarations: [
-    SearchBarComponent,
-    InputFileComponent,
-    ModalComponent,
-    ShareModalComponent,
-    ToastComponent,
-    UpgradeModalComponent,
-    SettingsModalComponent
+    SimpleConfirmationDialogComponent,
+    ShareConfirmationDialogComponent
   ],
   exports: [
-    SearchBarComponent,
-    InputFileComponent,
-    ModalComponent,
-    ToastComponent,
-    UpgradeModalComponent,
-    SettingsModalComponent
+    SimpleConfirmationDialogComponent,
+    ShareConfirmationDialogComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MaterialModule
   ]
 })
 export class SharedModule {

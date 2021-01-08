@@ -1,27 +1,82 @@
-.round-nav {
-  border-bottom-right-radius: 5cm;
-  border-top-right-radius: 5cm;
-}
-
-.font-italic {
-  opacity: 0.8;
-}
-
-.dropdown-toggle::after {
-  display: none;
-}
-
-.fixed {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 25%;
+.drive-container {
   height: 100%;
-  z-index: 3000;
-  overflow-y: auto;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 64px auto;
+  grid-template-areas:
+    "toolbar"
+    "table";
 }
 
-.size {
-  font-size: 1.5rem;
-  font-style: italic;
+.toolbar-item {
+  grid-area: toolbar;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.table-item {
+  grid-area: table;
+}
+
+.toolbar-button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.tab-container {
+}
+
+.mat-drawer {
+  width: 220px;
+}
+
+.ml {
+  margin-left: 210px;
+}
+
+::ng-deep .mat-menu-panel {
+  min-width: 350px !important;
+  max-width: 1000px !important;
+}
+
+.right-space {
+  margin-right: 6px
+}
+
+.custom-list-item {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 6px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.custom-list-item:hover{
+  background: #3f51b5;
+  color: white;
+}
+
+.custom-list-item:focus{
+  background: #3f51b5;
+  color: white;
+}
+
+.custom-list-item-active{
+  background: #3f51b5;
+  color: white;
 }

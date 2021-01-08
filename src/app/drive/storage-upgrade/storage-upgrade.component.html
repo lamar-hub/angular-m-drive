@@ -1,0 +1,103 @@
+<div class="upgrade-container">
+
+  <div class="logo-item bg"></div>
+
+  <div class="header-container">
+    <h1>Choose the PrimeBOX plan that's right for you</h1>
+    <h2>Membership plans start at <b>10$</b> / month</h2>
+    <p>PrimeBOX give you 500 MB of storage for free.</p>
+  </div>
+
+  <div class="plan-container">
+    <mat-card class="plan-card mat-elevation-z24">
+      <mat-card-header class="card-header-container">
+        <h4>Free</h4>
+        <h1>$0 / mo</h1>
+      </mat-card-header>
+      <mat-card-actions>
+        <button color="primary" class="full-width"
+                [disabled]="plan === 0"
+                mat-raised-button>{{plan === 0 ? 'Current plan' : 'Subscribe'}}</button>
+      </mat-card-actions>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <mat-list dense>
+          <div mat-subheader>Includes</div>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> 512 MB of storage</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> Email support</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> Freemium business model</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="plan-card mat-elevation-z24">
+      <mat-card-header class="card-header-container">
+        <h4>Business</h4>
+        <h1>$10 / mo</h1>
+      </mat-card-header>
+      <mat-card-actions>
+        <button color="primary" class="full-width"
+                [disabled]="plan === 1"
+                (click)="subscribe(1)"
+                mat-raised-button>{{plan === 1 ? 'Current plan' : 'Subscribe'}}</button>
+      </mat-card-actions>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <mat-list dense>
+          <div mat-subheader>Includes</div>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> 5 GB of storage</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> Email support</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> Phone support</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="plan-card mat-elevation-z24">
+      <mat-card-header class="card-header-container">
+        <h4>Pro</h4>
+        <h1>$50 / mo</h1>
+      </mat-card-header>
+      <mat-card-actions>
+        <button color="primary" class="full-width"
+                [disabled]="plan === 2"
+                (click)="subscribe(2)"
+                mat-raised-button>{{plan === 2 ? 'Current plan' : 'Subscribe'}}</button>
+      </mat-card-actions>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <mat-list dense>
+          <div mat-subheader>Includes</div>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> 100 GB of storage</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> Email support</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+            <div mat-line> Phone support</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

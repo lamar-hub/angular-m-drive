@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../auth/user.model';
 import {AuthService} from '../auth/auth.service';
+import {UploadProgressService} from './upload-progress.service';
+import {NotificationService} from './notification.service';
 
 @Component({
   selector: 'app-drive',
@@ -11,10 +13,11 @@ export class DriveComponent implements OnInit {
 
   user: User;
 
-  isCollapsed = true;
-  isCollapsedSideBar = true;
+  openSideNav = true;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+              private uploadProgressService: UploadProgressService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -29,6 +32,19 @@ export class DriveComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+
+  clearUploads($event: MouseEvent) {
+    $event.stopPropagation();
+
+    this.uploadProgressService.clear();
+  }
+
+  clearNotifications($event: MouseEvent) {
+    $event.stopPropagation();
+
+    this.notificationService.clear();
   }
 
   // getPlan(): Plan {

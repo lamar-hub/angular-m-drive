@@ -1,105 +1,101 @@
-<div class="row border-bottom bg-light align-items-center justify-content-between">
-  <div class="d-md-none col-12">
-    <nav class="navbar navbar-light bg-light">
-      <button class="navbar-toggler" type="button"
-              aria-controls="navbarSupportedContent"
-              aria-label="Toggle navigation"
-              [attr.aria-expanded]="!isCollapsed"
-              (click)="isCollapsed = !isCollapsed">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<div class="drive-container">
 
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav flex-column nav-pills nav-fill" role="tablist">
-          <li role="presentation" class="nav-item">
-            <a class="nav-link round-nav text-uppercase font-weight-bolder">
-              {{this.user.name}} {{this.user.surname}}
-            </a>
-          </li>
-          <li role="presentation" class="nav-item border-bottom">
-            <a class="nav-link round-nav pt-0">
-              {{this.user.email}}
-            </a>
-          </li>
-          <li role="presentation" class="nav-item text-left">
-            <a class="nav-link round-nav" routerLink="/drive/my-files">
-              <i class="fas fa-folder"></i> My files
-            </a>
-          </li>
-          <li role="presentation" class="nav-item text-left">
-            <a class="nav-link round-nav" routerLink="/drive/shared-with-me">
-              <i class="fas fa-folder-plus"></i> Shared with me
-            </a>
-          </li>
-          <li role="presentation" class="nav-item text-left">
-            <a class="nav-link round-nav" routerLink="/auth">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-  <div class="d-none d-md-block col-sm-4">
-    <img src="../../assets/images/logo.png" alt="Logo" height="296" class="outline-none" routerLink="/drive">
-  </div>
-  <div class="d-none col-md-4 d-md-flex justify-content-end pr-3">
-    <button class="btn shadow-none"
-            (click)="isCollapsedSideBar = !isCollapsedSideBar"
-            [attr.aria-expanded]="!isCollapsedSideBar"
-            aria-controls="collapseSideBar">
-      <i class="fas fa-bell fa-2x" style="color: #315b96"></i>
-    </button>
-    <button class="btn shadow-none">
-      <i class="fas fa-cog fa-2x" style="color: #315b96"></i>
-    </button>
-    <div class="dropdown">
-      <button type="button" class="btn btn-block shadow-none">
-        <i class="fas fa-user-circle fa-2x" style="color: #315b96"></i>
+  <mat-toolbar class="toolbar-item" color="primary">
+    <div class="toolbar-button-group" [class.ml]="openSideNav">
+      <button mat-icon-button class="mat-app-background" (click)="openSideNav = !openSideNav">
+        <mat-icon>menu</mat-icon>
       </button>
-      <div class="dropdown-menu dropdown-menu-right p-2">
-        <p class="font-weight-bolder mb-2">{{user.name}} {{user.surname}}</p>
-        <p class="font-italic">{{user.email}}</p>
-        <button class="btn btn-block btn-link text-left p-0 text-info"
-                (click)="logout()">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
-      </div>
+      <span> PrimeBOX </span>
     </div>
-  </div>
-</div>
-<div class="row mt-3">
-  <div class="col-12 col-lg-9 order-lg-3">
-        <router-outlet></router-outlet>
-      </div>
-  <div class="col-12 col-lg-3 order-lg-2">
-        <div class="row mt-3">
-          <div class="d-none d-md-block col-12 col-md-6 col-lg-12">
-            <ul class="nav flex-column nav-pills nav-fill" role="tablist">
-              <li role="presentation" class="nav-item text-left">
-                <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/my-files">
-                  <i class="fas fa-folder"></i> My files
-                </a>
-              </li>
-              <li role="presentation" class="nav-item text-left">
-                <a class="nav-link round-nav" routerLinkActive="active bg-info" routerLink="/drive/shared-with-me">
-                  <i class="fas fa-folder-plus"></i> Shared with me
-                </a>
-              </li>
-            </ul>
-          </div>
+    <div class="toolbar-button-group">
+      <button mat-icon-button [matMenuTriggerFor]="notificationMenu">
+        <mat-icon [matBadgeHidden]="notificationService.counter === 0" [matBadge]="notificationService.counter" matBadgeColor="warn">notifications</mat-icon>
+      </button>
+      <mat-menu (close)="notificationService.resetCounter()" class="menu-container" #notificationMenu="matMenu" (click)="$event.stopPropagation()">
+        <div class="menu-header-container">
+          <span style="font-style: oblique; font-size: large">Notifications</span>
+          <a mat-button color="primary" (click)="clearNotifications($event)">Clear</a>
         </div>
-      </div>
-  <div [ngStyle]="{display: !isCollapsedSideBar}" class="fixed border-left bg-light" id="collapseSideBar">
-    <div class="d-flex flex-row align-items-baseline justify-content-between border-bottom py-3 bg-info text-white"
-         style="opacity: .8">
-      <p class="pl-3 m-0 size">Notifications</p>
-      <button class="btn btn-outline-none" (click)="isCollapsedSideBar = !isCollapsedSideBar">
-        <i class="fas fa-times-circle fa-2x text-white"></i>
+        <mat-divider></mat-divider>
+        <mat-list>
+          <h4 *ngIf="notificationService.notifications.length === 0">There are no notifications</h4>
+          <mat-list-item *ngFor="let notification of notificationService.notifications">
+            <h2 matLine> {{notification.type}} </h2>
+            <p matLine> {{notification.message}} </p>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-menu>
+      <button mat-icon-button [matMenuTriggerFor]="uploadMenu">
+        <mat-icon [matBadgeHidden]="uploadProgressService.counter === 0" [matBadge]="uploadProgressService.counter" matBadgeColor="warn">cloud_upload</mat-icon>
       </button>
+      <mat-menu (close)="uploadProgressService.resetCounter()" class="menu-container" #uploadMenu="matMenu" (click)="$event.stopPropagation()">
+        <div class="menu-header-container">
+          <span style="font-style: oblique; font-size: large">Uploads</span>
+          <a mat-button color="primary" (click)="clearUploads($event)">Clear</a>
+        </div>
+        <mat-divider></mat-divider>
+        <mat-list>
+          <h4 *ngIf="uploadProgressService.uploadFiles.length === 0">There are no uploads</h4>
+          <mat-list-item *ngFor="let uploadFile of uploadProgressService.uploadFiles">
+            <h2 matLine> {{uploadFile.name}} </h2>
+            <mat-progress-bar mat-line mode="determinate"
+                              style="height: 8px;  border-radius: 100px;"
+                              [color]="uploadFile.success ? 'primary' : 'accent'"
+                              [value]="uploadFile.success ? 100 : uploadFile.uploaded / uploadFile.size * 100">
+            </mat-progress-bar>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-menu>
+      <button mat-icon-button [matMenuTriggerFor]="settingsMenu" aria-label="Example icon-button with a menu">
+        <mat-icon>person_outline</mat-icon>
+      </button>
+      <mat-menu #settingsMenu="matMenu">
+        <button mat-menu-item  [routerLink]="'/drive/storage'">
+          <mat-icon>cloud</mat-icon>
+          <span> Storage </span>
+        </button>
+        <button mat-menu-item [routerLink]="'/drive/profile'">
+          <mat-icon>person_outline</mat-icon>
+          <span> Profile </span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span> Logout </span>
+        </button>
+      </mat-menu>
     </div>
-    <div class="p-3">
-      <app-toast></app-toast>
-    </div>
-  </div>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="table-item">
+    <mat-sidenav mode="side" [opened]="openSideNav">
+      <mat-nav-list role="navigation">
+        <a mat-list-item class="custom-list-item" [routerLink]="'/drive/my-files'" routerLinkActive="custom-list-item-active">
+          <mat-icon class="right-space">folder</mat-icon>
+          <span> My files </span>
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item class="custom-list-item" [routerLink]="'/drive/shared-with-me'"  routerLinkActive="custom-list-item-active">
+          <mat-icon class="right-space">folder_shared</mat-icon>
+          <span> Shared with me </span>
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item class="custom-list-item" [routerLink]="'/drive/storage'"  routerLinkActive="custom-list-item-active">
+          <mat-icon class="right-space">cloud</mat-icon>
+          <span> Storage </span>
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item class="custom-list-item" [routerLink]="'/drive/profile'"  routerLinkActive="custom-list-item-active">
+          <mat-icon class="right-space">account_circle</mat-icon>
+          <span> Profile </span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="mat-app-background">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
 </div>

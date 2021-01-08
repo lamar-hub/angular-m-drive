@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Share file</h1>
+
+<mat-dialog-content class="dialog-container">
+    <mat-form-field>
+      <mat-label>Share to</mat-label>
+      <input matInput type="email" #shareUserEmail>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Leave a comment</mat-label>
+      <textarea matInput #message></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close color="accent">Close</button>
+  <button mat-button color="primary" (click)="onSubmit(shareUserEmail, message)" cdkFocusInitial>Share</button>
+</mat-dialog-actions>

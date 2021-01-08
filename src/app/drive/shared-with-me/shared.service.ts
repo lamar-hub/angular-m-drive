@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Shared} from './shared.model';
-import {BehaviorSubject} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {switchMap, take, tap} from 'rxjs/operators';
-import {ToastService} from '../toast.service';
+import {SharedFile} from './shared-file.model';
+import {BehaviorSubject, throwError} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {catchError, switchMap, take, tap} from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {NotificationService} from '../notification.service';
 
 export interface IShared {
-  sharedFileFileID: string;
+  sharedFileFileId: string;
   sharedFileFilename: string;
   sharedFileSize: number;
   sharedFileLastModified: number;
@@ -22,25 +23,37 @@ export interface IShared {
 })
 export class SharedService {
 
-  // tslint:disable-next-line:variable-name
-  private _sharedsSubject = new BehaviorSubject<Shared[]>(null);
+  private _sharedFilesSubject = new BehaviorSubject<SharedFile[]>(null);
 
-  constructor(private httpClient: HttpClient, private toastService: ToastService) {
+  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar, private notificationService: NotificationService) {
   }
 
-  get sharedsObservable() {
-    return this._sharedsSubject.asObservable();
+  get sharedFilesObservable() {
+    return this._sharedFilesSubject.asObservable();
   }
 
-  getAllShareds() {
+  getAllSharedFiles() {
     return this.httpClient
-      .get<IShared[]>(`http://localhost:8080/api/shareds`)
+      .get<IShared[]>(`http://localhost:8080/api/shared-files`)
       .pipe(
-        tap(response => {
-          const shareds: Shared[] = [];
-          response.forEach(item => {
-            shareds.push(new Shared(
-              item.sharedFileFileID,
+        catchError(err => {
+          const notification = {
+            type: 'ERROR',
+            message: err.error.message
+          };
+
+          this.notificationService.addNotification(notification);
+
+          this._snackBar.open(notification.type + ' ' + notification.message, 'Close', {
+            duration: 10000,
+          });
+          return throwError(err);
+        }),
+        tap((response: any) => {
+          const sharedFiles: SharedFile[] = [];
+          response.sharedFiles.forEach(item => {
+            sharedFiles.push(new SharedFile(
+              item.sharedFileFileId,
               item.sharedFileFilename,
               item.sharedFileSize,
               item.sharedFileLastModified,
@@ -51,46 +64,60 @@ export class SharedService {
               item.date
             ));
           });
-          this._sharedsSubject.next(shareds);
+          this._sharedFilesSubject.next(sharedFiles);
         })
       );
   }
 
-  shareFile(fileID: string, email: string, message: string) {
+  shareFile(fileId: string, email: string, message: string) {
     return this.httpClient
-      .post(`http://localhost:8080/api/shareds`, {sharedFileFileID: fileID, sharedFileUserEmail: email, message})
+      .post(`http://localhost:8080/api/shared-files`, {fileId, sharedUserUsername: email, message})
       .pipe(
+        catchError(err => {
+          const notification = {
+            type: 'ERROR',
+            message: err.error.message
+          };
+
+          this.notificationService.addNotification(notification);
+
+          this._snackBar.open(notification.type + ' ' + notification.message, 'Close', {
+            duration: 10000,
+          });
+          return throwError(err);
+        }),
         tap((response: any) => {
           if (response) {
             console.log(response);
-            this.toastService.toasts.push(
-              {
-                header: 'Sharing',
-                content: 'File "' + response.sharedFileFilename + '" is successfully shared to <' + email + '>.'
-              }
-            );
           }
         })
       );
   }
 
-  unshare(shared: Shared) {
+  unshare(sharedFile: SharedFile) {
 
     return this.httpClient
-      .delete<{ fileID: string }>(`http://localhost:8080/api/shareds/${shared.sharedFileID}`)
+      .delete<{ fileID: string }>(`http://localhost:8080/api/shared-files/${sharedFile.sharedFileFileId}`)
       .pipe(
+        catchError(err => {
+          const notification = {
+            type: 'ERROR',
+            message: err.error.message
+          };
+
+          this.notificationService.addNotification(notification);
+
+          this._snackBar.open(notification.type + ' ' + notification.message, 'Close', {
+            duration: 10000,
+          });
+          return throwError(err);
+        }),
         switchMap(() => {
-          this.toastService.toasts.push(
-            {
-              header: 'Shared file',
-              content: 'File "' + shared.sharedFileFilename + '" unshared successfully!'
-            }
-          );
-          return this.sharedsObservable;
+          return this.sharedFilesObservable;
         }),
         take(1),
-        tap((shareds: Shared[]) => {
-          this._sharedsSubject.next(shareds.filter(s => s.sharedFileID !== shared.sharedFileID));
+        tap((sharedFiles: SharedFile[]) => {
+          this._sharedFilesSubject.next(sharedFiles.filter(s => s.sharedFileFileId !== sharedFile.sharedFileFileId));
         })
       );
   }

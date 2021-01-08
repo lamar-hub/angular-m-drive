@@ -1,0 +1,48 @@
+.profile-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.profile-card {
+  height: 60%;
+  width: 70%;
+}
+
+.profile-content-container {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.avatar-item {
+  width: 200px;
+  height: 200px;
+  font-size: 200px;
+}
+
+.profile-form-container {
+  height: 100%;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.change-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.form-flex-column {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+}

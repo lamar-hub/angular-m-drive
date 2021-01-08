@@ -1,6 +1,24 @@
+.auth-container {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  grid-template-rows: 100vh;
+}
+
+.item-welcome {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+.item-auth {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
 .bg {
-  width: 100vw;
-  height: 100vh;
   background: url("../../assets/images/cloud.jpg") top left/cover no-repeat;
   color: white;
   margin: 0;

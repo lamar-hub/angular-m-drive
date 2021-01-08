@@ -1,103 +1,105 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {SharedService} from './shared.service';
-import {Shared} from './shared.model';
+import {SharedFile} from './shared-file.model';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {SimpleConfirmationDialogComponent} from '../../shared/simple-confirmation-dialog/simple-confirmation-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  ShareConfirmationDialogComponent,
+  ShareDialogData
+} from '../../shared/share-confirmation-dialog/share-confirmation-dialog.component';
+import {AuthService} from '../../auth/auth.service';
+import {User} from '../../auth/user.model';
 
 @Component({
   selector: 'app-shared-with-me',
   templateUrl: './shared-with-me.component.html',
   styleUrls: ['./shared-with-me.component.scss']
 })
-export class SharedWithMeComponent implements OnInit {
+export class SharedWithMeComponent implements OnInit, AfterViewInit {
 
-  shareds: Shared[];
+  displayedColumns: string[] = ['icon', 'filename', 'shareText', 'sharingUser', 'size', 'shareDate', 'action'];
+  dataSource: MatTableDataSource<SharedFile>;
+  user: User;
 
-  search: string;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  filenameAsc = true;
-  sizeAsc = true;
-  nameAsc = true;
-  shareDateAsc = true;
-
-  constructor(private sharedService: SharedService) {
+  constructor(private authService: AuthService, private sharedService: SharedService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
+    this.dataSource = new MatTableDataSource([]);
+
     this.sharedService
-      .sharedsObservable
-      .subscribe(shareds => {
-          if (shareds) {
-            this.shareds = shareds;
-          }
+      .sharedFilesObservable
+      .subscribe(sharedFile => {
+        if (sharedFile) {
+          this.dataSource.data = sharedFile;
+        }
+      });
+    this.sharedService.getAllSharedFiles().subscribe();
+
+    this.authService
+      .userObservable
+      .subscribe(
+        user => {
+          this.user = user;
         }
       );
-    this.sharedService.getAllShareds().subscribe();
   }
 
-  onSortFilename() {
-    this.filenameAsc = !this.filenameAsc;
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  onSortSize() {
-    this.sizeAsc = !this.sizeAsc;
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
-  onSortName() {
-    this.nameAsc = !this.nameAsc;
+  discardSharedFile(sharedFile: SharedFile) {
+    const matDialogRef = this.dialog.open(SimpleConfirmationDialogComponent, {
+      data: {
+        headerText: 'Discard file',
+        contentText: 'Are you sure about discarding?',
+        submitButtonText: 'DISCARD',
+        submitButtonClass: '',
+        cancelButtonText: 'Cancel',
+        cancelButtonClass: ''
+      }
+    });
+
+    matDialogRef.afterClosed().subscribe((submitted: boolean) => {
+      if (submitted) {
+        this.sharedService.unshare(sharedFile).subscribe();
+      }
+    });
   }
 
-  onSortShareDate() {
-    this.shareDateAsc = !this.shareDateAsc;
+  downloadSharedFile(sharedFile: SharedFile) {
+    const a = document.createElement('a');
+    a.href = `http://localhost:8080/api/files/${sharedFile.sharedFileFileId}/download`;
+    a.click();
   }
 
-  onSearch(evt: any) {
-    this.search = evt.target.value;
+  shareFile(sharedFile: SharedFile) {
+    const matDialogRef = this.dialog.open(ShareConfirmationDialogComponent);
+
+    matDialogRef.afterClosed().subscribe((data: ShareDialogData) => {
+      if (!data || !data.email) {
+        console.log('data not exists');
+        return;
+      }
+      this.sharedService.shareFile(sharedFile.sharedFileFileId, data.email, data.message ? data.message : '').subscribe();
+    });
   }
 
-  // openDiscardModal(shared: Shared) {
-  //   const modalRef = this.modalService.open(ModalComponent);
-  //   modalRef.componentInstance.title = 'Discard';
-  //   modalRef.componentInstance.content = `Do you want to discard: ${shared.sharedFileFilename}`;
-  //   modalRef.result
-  //     .then(result => {
-  //       if (result.ok) {
-  //         this.sharedService.unshare(shared).subscribe();
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  // }
-
-  // openDownloadModal(shared: Shared) {
-  //   const modalRef = this.modalService.open(ModalComponent);
-  //   modalRef.componentInstance.title = 'Download';
-  //   modalRef.componentInstance.content = `Do you want to download: ${shared.sharedFileFilename}`;
-  //   modalRef.result
-  //     .then(result => {
-  //       if (result.ok) {
-  //         const a = document.createElement('a');
-  //         a.href = `http://localhost:8080/api/files/${shared.sharedFileID}/download`;
-  //         a.click();
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  // }
-
-  // openMessageModal(message: any) {
-  //   const modalRef = this.modalService.open(ModalComponent);
-  //   modalRef.componentInstance.title = 'Message';
-  //   modalRef.componentInstance.content = message;
-  //   modalRef.result
-  //     .then()
-  //     .catch(error => console.log(error));
-  // }
-
-  // openShareModal(shared: Shared) {
-  //   const modalRef = this.modalService.open(ShareModalComponent);
-  //   modalRef.result
-  //     .then(result => {
-  //       if (result) {
-  //         this.sharedService.shareFile(shared.sharedFileID, result.email, result.message).subscribe();
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  // }
 }

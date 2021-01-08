@@ -1,0 +1,52 @@
+<div class="profile-container mat-elevation-z24">
+  <mat-card class="profile-card mat-elevation-z24">
+    <mat-card-content style="height: 90%">
+      <mat-card-title style="text-align: center; opacity: .65">User profile</mat-card-title>
+      <div class="profile-content-container">
+        <mat-icon class="avatar-item">person_outline</mat-icon>
+        <div class="profile-form-container">
+          <mat-form-field appearance="standard">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Enter email" [value]="user.email" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="standard">
+            <mat-label>Phone</mat-label>
+            <span matPrefix>+ &nbsp;</span>
+            <input type="tel" matInput placeholder="Enter phone" [(ngModel)]="user.phone">
+            <mat-icon matSuffix>mode_edit</mat-icon>
+          </mat-form-field>
+          <div class="change-container">
+            <div class="form-flex-column">
+              <mat-form-field appearance="standard">
+                <mat-label>First name</mat-label>
+                <input matInput placeholder="Enter first name" [(ngModel)]="user.name">
+                <mat-icon matSuffix>mode_edit</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="standard">
+                <mat-label>Stored</mat-label>
+                <input matInput [value]="user.stored | numberToSize" disabled>
+              </mat-form-field>
+              <mat-checkbox [(ngModel)]="user.twoFactorVerification">Two factor verification</mat-checkbox>
+            </div>
+            <div class="form-flex-column">
+              <mat-form-field appearance="standard">
+                <mat-label>Last name</mat-label>
+                <input matInput placeholder="Enter last name" [(ngModel)]="user.surname">
+                <mat-icon matSuffix>mode_edit</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="standard">
+                <mat-label>Storage limit</mat-label>
+                <input matInput [value]="user.limit | numberToSize" disabled>
+              </mat-form-field>
+              <mat-checkbox [(ngModel)]="user.active">Profile active</mat-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions align="end">
+      <button mat-button color="primary" (click)="onSave()">Save</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

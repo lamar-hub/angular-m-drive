@@ -1,6 +1,6 @@
 export class File {
   constructor(
-    public fileID: string,
+    public fileId: string,
     public filename: string,
     public type: string,
     public size: number,

@@ -1,9 +1,39 @@
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 7em;
+}
+
+.header-spacing {
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+}
+
 .custom-header {
   font-style: oblique;
   opacity: .4;
 }
 
-.full-width {
+.signup-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+.double-input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   width: 100%;
 }
 
+.double-input-width {
+  width: 49%;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}

@@ -1,92 +1,121 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {FileService} from './file.service';
 import {File} from './file.model';
 import {SharedService} from '../shared-with-me/shared.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {VerificationDialogComponent} from '../../auth/log-in/verification-dialog/verification-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {SimpleConfirmationDialogComponent} from '../../shared/simple-confirmation-dialog/simple-confirmation-dialog.component';
+import {
+  ShareConfirmationDialogComponent,
+  ShareDialogData
+} from '../../shared/share-confirmation-dialog/share-confirmation-dialog.component';
+import {AuthService} from '../../auth/auth.service';
+import {User} from '../../auth/user.model';
 
 @Component({
   selector: 'app-my-files',
   templateUrl: './my-files.component.html',
   styleUrls: ['./my-files.component.scss']
 })
-export class MyFilesComponent implements OnInit {
+export class MyFilesComponent implements OnInit, AfterViewInit {
 
-  files: File[];
-  search: string;
+  displayedColumns: string[] = ['icon', 'filename', 'type', 'size', 'lastModified', 'action'];
+  dataSource: MatTableDataSource<File>;
+  user: User;
 
-  filenameAsc = true;
-  modifiedAsc = true;
-  sizeAsc = true;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private fileService: FileService, private sharedService: SharedService) {
+  constructor(private fileService: FileService,
+              private authService: AuthService,
+              private sharedService: SharedService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
+    this.dataSource = new MatTableDataSource([]);
+
     this.fileService
       .filesObservable
       .subscribe(files => {
         if (files) {
-          this.files = files;
+          this.dataSource.data = files;
         }
       });
     this.fileService.getAllFiles().subscribe();
+
+    this.authService
+      .userObservable
+      .subscribe(
+        user => {
+          this.user = user;
+        }
+      );
   }
 
-  onSearch(evt: any) {
-    this.search = evt.target.value;
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  onSortFilename() {
-    this.filenameAsc = !this.filenameAsc;
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
-  onSortLastModified() {
-    this.modifiedAsc = !this.modifiedAsc;
+  deleteFile(file: File) {
+    const matDialogRef = this.dialog.open(SimpleConfirmationDialogComponent, {
+      data: {
+        headerText: 'Delete file',
+        contentText: 'Are you sure about deleting?',
+        submitButtonText: 'DELETE',
+        submitButtonClass: '',
+        cancelButtonText: 'Cancel',
+        cancelButtonClass: ''
+      }
+    });
+
+    matDialogRef.afterClosed().subscribe((submitted: boolean) => {
+      if (submitted) {
+        this.fileService.deleteFile(file).subscribe();
+      }
+    });
   }
 
-  onSortSize() {
-    this.sizeAsc = !this.sizeAsc;
+  downloadFile(file: File) {
+    const a = document.createElement('a');
+    a.href = `http://localhost:8080/api/files/${file.fileId}/download`;
+    a.click();
   }
 
-  onFileChosen(file: any) {
-    this.fileService.uploadFile(file).subscribe();
+  shareFile(file: File) {
+    const matDialogRef = this.dialog.open(ShareConfirmationDialogComponent);
+
+    matDialogRef.afterClosed().subscribe((data: ShareDialogData) => {
+      if (!data || !data.email) {
+        console.log('data not exists');
+        return;
+      }
+      this.sharedService.shareFile(file.fileId, data.email, data.message ? data.message : '').subscribe();
+    });
   }
 
-  // openDeleteModal(file: File) {
-  //   const modalRef = this.modalService.open(ModalComponent);
-  //   modalRef.componentInstance.title = 'Delete';
-  //   modalRef.componentInstance.content = `Do you want to delete: ${file.filename}`;
-  //   modalRef.result
-  //     .then(result => {
-  //       if (result.ok) {
-  //         this.fileService.deleteFile(file).subscribe();
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  // }
+  handleAttachmentChange(files: FileList) {
+    if (files.length !== 1) {
+      alert('Must choose exactly one file!');
+      return;
+    }
+    this.fileService.uploadFile(files.item(0)).subscribe();
+  }
 
-  // openDownloadModal(file: File) {
-  //   const modalRef = this.modalService.open(ModalComponent);
-  //   modalRef.componentInstance.title = 'Download';
-  //   modalRef.componentInstance.content = `Do you want to download: ${file.filename}`;
-  //   modalRef.result
-  //     .then(result => {
-  //       if (result.ok) {
-  //         const a = document.createElement('a');
-  //         a.href = `http://localhost:8080/api/files/${file.fileID}/download`;
-  //         a.click();
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  // }
-
-  // openShareModal(file: File) {
-  //   const modalRef = this.modalService.open(ShareModalComponent);
-  //   modalRef.result
-  //     .then(result => {
-  //       if (result) {
-  //         this.sharedService.shareFile(file.fileID, result.email, result.message).subscribe();
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  // }
+  onFileInputClick(fileInput: HTMLInputElement) {
+    fileInput.click();
+  }
 }

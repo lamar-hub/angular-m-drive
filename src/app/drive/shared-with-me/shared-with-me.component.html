@@ -1,79 +1,117 @@
-<div class="row justify-content-center mt-3">
-  <div class="col-8">
-    <app-search-bar (search)="onSearch($event)"></app-search-bar>
+<div class="shared-container">
+
+  <div class="info-container">
+    <mat-card class="first-card mat-elevation-z24">
+      <mat-card-header>
+        <mat-card-title style="font-size: 35px; padding-bottom: 10px">Storage</mat-card-title>
+        <mat-card-subtitle style="color: white"> {{user.stored | numberToSize}} of {{user.limit | numberToSize}} used</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-progress-bar mat-line
+                          mode="determinate"
+                          style="width: 30vw; height: 12px; border-radius: 20px;"
+                          color="warn"
+                          [value]="(user.stored / user.limit) * 100">
+        </mat-progress-bar>
+      </mat-card-content>
+      <mat-divider style="background: white"></mat-divider>
+      <mat-card-footer class="card-footer-container">
+        <mat-icon style="color: white; margin-right: 12px; font-weight: bolder">warning</mat-icon>
+        <span>You have reached {{user.stored / user.limit | percent}} space!</span>
+      </mat-card-footer>
+    </mat-card>
+    <mat-card class="second-card mat-elevation-z24">
+      <mat-card-header>
+        <mat-card-title style="font-size: 35px; padding-bottom: 10px">Subscribe</mat-card-title>
+        <mat-card-subtitle style="color: white; font-style: italic; font-size: 20px;">Upgrade your current plan</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p style="width: 30vw">
+          Choose the PrimeBox plan that's right for you
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button [routerLink]="'/drive/storage'">UPGRADE</button>
+      </mat-card-actions>
+    </mat-card>
   </div>
-  <div class="col-12">
-    <table class="table table-responsive-sm table-hover mt-3">
-      <thead>
-      <tr>
-        <th class="pb-3 pr-0">
-          File
-        </th>
-        <th class="pl-0">
-            <i [class]="filenameAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-               (click)="onSortFilename()"></i>
-        </th>
-        <th>
-          <div class="d-flex flex-row align-items-baseline">
-            <label class="mb-0">From</label>
-            <i [class]="nameAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-               (click)="onSortName()"></i>
-          </div>
-        </th>
-        <th>
-          <div class="d-flex flex-row align-items-baseline">
-            <label class="mb-0">Size</label>
-            <i [class]="sizeAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-               (click)="onSortSize()"></i>
-          </div>
-        </th>
-        <th class="pb-3">Message</th>
-        <th>
-          <div class="d-flex flex-row align-items-baseline justify-content-center">
-            <label class="mb-0">Share</label>
-            <label class="mb-0 ml-1">at</label>
-            <i [class]="shareDateAsc?'fas fa-long-arrow-alt-down p-2':'fas fa-long-arrow-alt-up p-2'"
-               (click)="onSortShareDate()"></i>
-          </div>
-        </th>
-        <th class="text-center pb-3">Download</th>
-        <th class="text-center pb-3">Share</th>
-        <th class="text-center pb-3">Discard</th>
+
+  <div class="search-item">
+    <mat-form-field class="half-width">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input>
+    </mat-form-field>
+  </div>
+
+  <div class="tab-item">
+    <table mat-table class="full-width" *ngIf="!!dataSource" [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="icon">
+        <th mat-header-cell *matHeaderCellDef> Shared file</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon>{{row.sharedFileFilename | icon}}</mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="filename">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
+        <td mat-cell *matCellDef="let row"> {{row.sharedFileFilename}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="shareText">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Message</th>
+        <td mat-cell *matCellDef="let row"> {{row.message}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sharingUser">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Shared from</th>
+        <td mat-cell *matCellDef="let row"> {{row.sharedFileUserName}} {{row.sharedFileUserSurname}}
+          <{{row.sharedFileUserEmail}}>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="size">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Size</th>
+        <td mat-cell *matCellDef="let row"> {{row.sharedFileSize | numberToSize}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="shareDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Share date</th>
+        <td mat-cell *matCellDef="let row"> {{row.date | date}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>menu</mat-icon>
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="downloadSharedFile(row)">
+              <mat-icon>cloud_download</mat-icon>
+              <span>Download</span>
+            </button>
+            <button mat-menu-item (click)="shareFile(row)">
+              <mat-icon>share</mat-icon>
+              <span>Share</span>
+            </button>
+            <button mat-menu-item (click)="discardSharedFile(row)">
+              <mat-icon>delete</mat-icon>
+              <span>Discard</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
       </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let file of shareds
-                                    | searchShareds: search
-                                    | sortString: 'sharedFileFilename' : filenameAsc
-                                    | sortString: 'sharedUserEmail' : nameAsc
-                                    | sortNumber: 'sharedFileSize' : sizeAsc
-                                    | sortNumber: 'shareDate' : shareDateAsc">
-        <td class="pr-0">
-          <i [class]="file.sharedFileFilename | icon"></i>
-        </td>
-        <td class="trim-text"
-            data-toggle="tooltip"
-            data-placement="top"
-            [title]="file.sharedFileFilename">{{file.sharedFileFilename}}
-        </td>
-        <td data-toggle="tooltip"
-            data-placement="top"
-            [title]="file.sharedUserName + ' ' + file.sharedUserSurname">{{file.sharedUserEmail}}
-        </td>
-        <td>{{file.sharedFileSize | numberToSize}}</td>
-        <td class="trim-text" (click)="openMessageModal(file.message)">{{file.message}}</td>
-        <td class="text-center">{{file.shareDate | date:'dd.MM.yyyy.'}}</td>
-        <td class="text-center">
-          <i class="fas fa-cloud-download-alt text-success" (click)="openDownloadModal(file)"></i>
-        </td>
-        <td class="text-center">
-          <i class="fas fa-user-plus text-primary" (click)="openShareModal(file)"></i>
-        </td>
-        <td class="text-center">
-          <i class="fas fa-trash-alt text-danger" (click)="openDiscardModal(file)"></i>
-        </td>
-      </tr>
-      </tbody>
     </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
 </div>

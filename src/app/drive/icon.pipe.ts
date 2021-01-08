@@ -10,8 +10,6 @@ export class IconPipe implements PipeTransform {
     let classReturn: string;
     switch (array[array.length - 1]) {
       case 'txt':
-        classReturn = 'fas fa-file-alt text-primary fa-2x';
-        break;
       case 'doc':
       case 'dot':
       case 'wbk':
@@ -20,8 +18,6 @@ export class IconPipe implements PipeTransform {
       case 'docb':
       case 'dotm':
       case 'dotx':
-        classReturn = 'fas fa-file-word text-primary fa-2x';
-        break;
       case 'xls':
       case 'xlt':
       case 'xlm':
@@ -33,8 +29,6 @@ export class IconPipe implements PipeTransform {
       case 'xltm':
       case 'xll':
       case 'xlw':
-        classReturn = 'fas fa-file-excel text-success fa-2x';
-        break;
       case 'ppt':
       case 'pot':
       case 'pptx':
@@ -46,10 +40,10 @@ export class IconPipe implements PipeTransform {
       case 'ppsm':
       case 'sldx':
       case 'sldm':
-        classReturn = 'fas fa-file-powerpoint text-warning fa-2x';
+        classReturn = 'text_fields';
         break;
       case 'pdf':
-        classReturn = 'fas fa-file-pdf text-danger fa-2x';
+        classReturn = 'picture_as_pdf';
         break;
       case 'jpeg':
       case 'jpg':
@@ -63,10 +57,7 @@ export class IconPipe implements PipeTransform {
       case 'ai':
       case 'indd':
       case 'raw':
-        classReturn = 'fas fa-file-image fa-2x';
-        break;
-      case 'csv':
-        classReturn = 'fas fa-file-csv fa-2x';
+        classReturn = 'insert_photo';
         break;
       case 'html':
       case 'css':
@@ -90,7 +81,7 @@ export class IconPipe implements PipeTransform {
       case 'xsd':
       case 'swift':
       case 'vs':
-        classReturn = 'fas fa-file-code fa-2x';
+        classReturn = 'code';
         break;
       case 'iso':
       case 'tar':
@@ -102,7 +93,7 @@ export class IconPipe implements PipeTransform {
       case 'zipx':
       case 'zz':
       case 'jar':
-        classReturn = 'fas fa-file-archive fa-2x';
+        classReturn = 'archive';
         break;
       case 'webm':
       case 'mkv':
@@ -114,7 +105,7 @@ export class IconPipe implements PipeTransform {
       case 'mp4':
       case 'mpg':
       case 'mpeg':
-        classReturn = 'fas fa-file-video fa-2x';
+        classReturn = 'movie';
         break;
       case 'aiff':
       case 'alac':
@@ -128,10 +119,10 @@ export class IconPipe implements PipeTransform {
       case 'voc':
       case 'vox':
       case 'wma':
-        classReturn = 'fas fa-file-audio fa-2x';
+        classReturn = 'audiotrack';
         break;
       default:
-        classReturn = 'fas fa-file fa-2x';
+        classReturn = 'insert_drive_file';
     }
     return classReturn;
   }

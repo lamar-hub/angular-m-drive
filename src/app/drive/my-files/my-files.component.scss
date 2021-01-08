@@ -1,48 +1,66 @@
-input:focus, textarea:focus {
-  box-shadow: none;
+.files-container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 20px auto 20px;
+  grid-template-rows: 25% 15% 60%;
+  grid-template-areas:
+    "info info info"
+    ". input ."
+    ". tab .";
 }
 
-.btn:focus {
-  box-shadow: none;
+.info-container {
+  grid-area: info;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.btn:not(:disabled):not(.disabled):active:focus,
-.show > .btn.dropdown-toggle:focus {
-  box-shadow: none;
+.card-footer-container {
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
-th {
-  border: 0;
+.first-card {
+  max-width: 40%;
+  max-height: 170px;
+  background: linear-gradient(50deg, #d50000, #ff9e80) !important;
+  color: white;
 }
 
-i:hover {
-  background-color: lightgray;
-  border-radius: 50%;
+.second-card {
+  max-width: 40%;
+  max-height: 170px;
+  background: linear-gradient(50deg, #ee3476, #f1b1ad) !important;
+  //background: linear-gradient(50deg, #ff7043, #ffd86f) !important;
+  //background: linear-gradient(50deg, #d50000, #ff9e80) !important;
+  color: white;
 }
 
-th {
-  opacity: 0.7;
+.double-input-container {
+  grid-area: input;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.table td {
-  vertical-align: middle;
+.table-container {
+  grid-area: tab;
 }
 
-.fa-trash-alt {
-  padding: .65rem;
+td.mat-cell {
+  max-width: 15vw;
 }
 
-.fa-cloud-download-alt {
-  padding: .65rem;
+.full-width {
+  width: 100%;
 }
 
-.fa-user-plus {
-  padding: .65rem;
-}
-
-.trim-text {
-  white-space: nowrap;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.half-width {
+  width: 40%;
 }

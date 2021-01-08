@@ -1,22 +1,19 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {DriveComponent} from './drive.component';
-import { MyFilesComponent } from './my-files/my-files.component';
-import { SharedWithMeComponent } from './shared-with-me/shared-with-me.component';
+import {MyFilesComponent} from './my-files/my-files.component';
+import {SharedWithMeComponent} from './shared-with-me/shared-with-me.component';
 import {DriveRoutingModule} from './drive-routing.module';
 import {SharedModule} from '../shared/shared.module';
-import { NumberToSizePipe } from './number-to-size.pipe';
-import {ReactiveFormsModule} from '@angular/forms';
-import {SearchFilesPipe} from './my-files/search-files.pipe';
+import {NumberToSizePipe} from './number-to-size.pipe';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IconPipe} from './icon.pipe';
-import {SortStringPipe} from './sort-string.pipe';
-import {SortNumberPipe} from './sort-number.pipe';
-import {SearchSharedsPipe} from './shared-with-me/search-shareds.pipe';
-import {ModalComponent} from '../shared/modal/modal.component';
-import {ShareModalComponent} from '../shared/share-modal/share-modal.component';
-import {ToastComponent} from '../shared/toast/toast.component';
-import {UpgradeModalComponent} from '../shared/upgrade-modal/upgrade-modal.component';
-import {SettingsModalComponent} from '../shared/settings-modal/settings-modal.component';
+import {MaterialModule} from '../material/material.module';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {SimpleConfirmationDialogComponent} from '../shared/simple-confirmation-dialog/simple-confirmation-dialog.component';
+import {ShareConfirmationDialogComponent} from '../shared/share-confirmation-dialog/share-confirmation-dialog.component';
+import { StorageUpgradeComponent } from './storage-upgrade/storage-upgrade.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -24,35 +21,30 @@ import {SettingsModalComponent} from '../shared/settings-modal/settings-modal.co
     MyFilesComponent,
     SharedWithMeComponent,
     NumberToSizePipe,
-    SearchFilesPipe,
-    SearchSharedsPipe,
     IconPipe,
-    SortStringPipe,
-    SortNumberPipe,
+    StorageUpgradeComponent,
+    ProfileComponent,
   ],
   imports: [
     CommonModule,
     DriveRoutingModule,
     SharedModule,
+    FormsModule,
     ReactiveFormsModule,
+    MaterialModule,
+    FlexLayoutModule
   ],
   entryComponents: [
-    ModalComponent,
-    ShareModalComponent,
-    ToastComponent,
-    UpgradeModalComponent,
-    SettingsModalComponent
+    SimpleConfirmationDialogComponent,
+    ShareConfirmationDialogComponent
   ],
   exports: [
     NumberToSizePipe
   ],
   providers: [
     NumberToSizePipe,
-    SearchFilesPipe,
-    SearchSharedsPipe,
     IconPipe,
-    SortStringPipe,
-    SortNumberPipe
   ]
 })
-export class DriveModule { }
+export class DriveModule {
+}

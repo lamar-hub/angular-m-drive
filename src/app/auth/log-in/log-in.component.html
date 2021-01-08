@@ -1,28 +1,30 @@
-<div class="d-flex justify-content-around mt-5 mb-5">
-  <h1 class="custom-header">Authenticate</h1>
+<div class="login-container">
+  <div class="header-spacing">
+    <h1 class="custom-header">Authenticate</h1>
+  </div>
+  <form class="login-form-container" [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email">
+      <mat-error *ngIf="!form.get('email').valid && form.get('email').touched">
+        Please enter a valid email address
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput formControlName="password">
+      <mat-error *ngIf="form.get('password').touched">
+        Password is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <button mat-raised-button
+            class="login-button-spacing" color="primary"
+            (click)="onLogin()"
+            [disabled]="!form.valid">LOG IN
+    </button>
+    <button mat-flat-button
+            class=""
+            routerLink="/auth/sign-up">Sign up
+    </button>
+  </form>
 </div>
-<form [formGroup]="form">
-  <mat-form-field class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email">
-    <mat-error *ngIf="!form.get('email').valid && form.get('email').touched">
-      Please enter a valid email address
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="full-width">
-    <mat-label>Password</mat-label>
-    <input type="password" matInput formControlName="password">
-    <mat-error *ngIf="form.get('password').touched">
-      Password is <strong>required</strong>
-    </mat-error>
-  </mat-form-field>
-  <button mat-raised-button
-          class="full-width mt-5" color="primary"
-          (click)="onLogin()"
-          [disabled]="!form.valid">LOG IN
-  </button>
-  <button mat-flat-button
-          class="full-width"
-          routerLink="/auth/sign-up">Sign up
-  </button>
-</form>
